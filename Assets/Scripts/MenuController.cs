@@ -22,8 +22,11 @@ public class MenuController : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        print("aaaaaaaaaaaaaa");
         ChangeMenu(lobbyMenu.gameObject);
+        print("bbbbbbbbbbbbbbbb");
         lobbyMenu.photonView.RPC("UpdatePlayerList",RpcTarget.All);
+        print("cccccccccccccccccc");
     }
     
     public void ChangeMenu(GameObject menu)

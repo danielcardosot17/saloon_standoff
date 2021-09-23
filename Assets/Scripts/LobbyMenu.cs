@@ -13,6 +13,7 @@ public class LobbyMenu : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdatePlayerList()
     {
+        print("dddddddddddddd");
         playerList.text = NetworkManager.Instance.GetPlayerlist();
         startGameBtn.interactable = NetworkManager.Instance.IsMasterClient();
     }
