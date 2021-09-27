@@ -210,33 +210,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0939e87252455e041a97b916f8c49a31, type: 3}
---- !u!1 &693271785 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2689771409575463462, guid: 0939e87252455e041a97b916f8c49a31, type: 3}
-  m_PrefabInstance: {fileID: 693271784}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &693271786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 693271785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 2
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1001 &1280718069
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -294,33 +267,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49500c0bf74a7654499b4a9bee50814e, type: 3}
---- !u!1 &1280718070 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5647260788553892423, guid: 49500c0bf74a7654499b4a9bee50814e, type: 3}
-  m_PrefabInstance: {fileID: 1280718069}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1280718071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1280718070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 3
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1001 &1393758308
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -442,6 +388,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 457859446901583077, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
+      propertyPath: sceneViewId
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4746327804846008717, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
       propertyPath: m_Name
       value: GamePlayManager
