@@ -2,12 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public static NetworkManager Instance {get; private set;}
+
+    [SerializeField] private int maxPlayers;
+    private RoomOptions roomOptions = new RoomOptions();
     
     void Awake()
     {
@@ -24,6 +28,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
+        roomOptions.MaxPlayers = (byte)maxPlayers;
     }
 
     public override void OnConnectedToMaster()
@@ -32,8 +37,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
 
     public void CreateRoom(string roomName)
-    {
-        PhotonNetwork.CreateRoom(roomName);
+    { 
+        PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
     public void JoinRoom(string roomName)
     {
@@ -54,10 +59,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         return playerList;
     }
 
+    public int GetPlayerCount()
+    {
+        return PhotonNetwork.CountOfPlayers;
+    }
+
     public void ExitLobby()
     {
         PhotonNetwork.LeaveRoom();
     }
+    
     [PunRPC]
     public void StartGame(string gameSceneName)
     {

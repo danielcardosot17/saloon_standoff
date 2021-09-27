@@ -123,33 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &339477541 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5173495211267342490, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-  m_PrefabInstance: {fileID: 5173495210970913246}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &339477542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 339477541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 2
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1001 &1621980107180269367
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -275,10 +248,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5173495209530779344, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 41c887c8f7bcdee4aba9115512a612d2, type: 3}
+    - target: {fileID: 339477542, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
+      propertyPath: sceneViewId
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5173495209744674774, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
       propertyPath: m_Name
       value: '## UI ##'
@@ -327,82 +300,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5173495209975682604, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5173495210195444417, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_Type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5173495210195444417, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 3ff0c3391bfd1a349b933ecb162cf2b9, type: 3}
-    - target: {fileID: 5173495210204735149, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_fontSize
-      value: 28
-      objectReference: {fileID: 0}
-    - target: {fileID: 5173495210204735149, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 30eba25873b26374eb83dd30c389dc22, type: 2}
-    - target: {fileID: 5173495210204735149, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_fontSizeBase
-      value: 28
-      objectReference: {fileID: 0}
-    - target: {fileID: 5173495210204735149, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -4719071181704889289, guid: 30eba25873b26374eb83dd30c389dc22, type: 2}
-    - target: {fileID: 5173495210204735149, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_VerticalAlignment
-      value: 512
-      objectReference: {fileID: 0}
-    - target: {fileID: 5173495210204735149, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5173495210327989376, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_Type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5173495210327989376, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 3ff0c3391bfd1a349b933ecb162cf2b9, type: 3}
-    - target: {fileID: 5173495210678467562, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_fontSize
-      value: 28
-      objectReference: {fileID: 0}
-    - target: {fileID: 5173495210678467562, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 30eba25873b26374eb83dd30c389dc22, type: 2}
-    - target: {fileID: 5173495210678467562, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_fontSizeBase
-      value: 28
-      objectReference: {fileID: 0}
-    - target: {fileID: 5173495210678467562, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -4719071181704889289, guid: 30eba25873b26374eb83dd30c389dc22, type: 2}
-    - target: {fileID: 5173495210678467562, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_VerticalAlignment
-      value: 512
-      objectReference: {fileID: 0}
-    - target: {fileID: 5173495210678467562, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5173495211267342490, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5173495211268788860, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 41c887c8f7bcdee4aba9115512a612d2, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
 --- !u!1001 &6897133748442475674
