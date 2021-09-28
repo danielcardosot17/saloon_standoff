@@ -2,13 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
+using Photon.Realtime;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameplayManager : MonoBehaviourPunCallbacks
 {
     public static GameplayManager Instance {get; private set;}
 
-    [SerializeField] private string prefabLocation;
+    [SerializeField] private int numberOfPlayerSprites;
+    [SerializeField] private string[] prefabLocations;
     [SerializeField] private Transform[] spawnLocations;
     private int playersInGame = 0;
     public List<PlayerController> Players { get => players; private set => players = value; }
@@ -43,7 +47,9 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 
     private void CreatePlayer()
     {
-        var playerObj = PhotonNetwork.Instantiate(prefabLocation, spawnLocations[PhotonNetwork.PlayerList.Length - 1].position, Quaternion.identity);
+        var prefab = prefabLocations[PhotonNetwork.LocalPlayer.GetPlayerNumber()] + "/Player_" + Random.Range(0,numberOfPlayerSprites);
+        print("aaaaaaaaaaaaaa" + prefab);
+        var playerObj = PhotonNetwork.Instantiate(prefab, spawnLocations[PhotonNetwork.LocalPlayer.GetPlayerNumber()].position, Quaternion.identity);
         var player = playerObj.GetComponent<PlayerController>();
         player.photonView.RPC("InitializePlayer", RpcTarget.All, PhotonNetwork.LocalPlayer);
     }

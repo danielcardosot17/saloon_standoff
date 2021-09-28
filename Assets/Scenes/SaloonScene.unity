@@ -390,7 +390,39 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 457859446901583077, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
       propertyPath: sceneViewId
-      value: 4
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1780175428370363319, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
+      propertyPath: numberOfPlayerSprites
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1780175428370363319, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
+      propertyPath: prefabLocations.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1780175428370363319, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
+      propertyPath: prefabLocations.Array.data[0]
+      value: PlayerSprites/spawn_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1780175428370363319, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
+      propertyPath: prefabLocations.Array.data[1]
+      value: PlayerSprites/spawn_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1780175428370363319, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
+      propertyPath: prefabLocations.Array.data[2]
+      value: PlayerSprites/spawn_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1780175428370363319, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
+      propertyPath: prefabLocations.Array.data[3]
+      value: PlayerSprites/spawn_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1780175428370363319, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
+      propertyPath: prefabLocations.Array.data[4]
+      value: PlayerSprites/spawn_4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1780175428370363319, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
+      propertyPath: prefabLocations.Array.data[5]
+      value: PlayerSprites/spawn_5
       objectReference: {fileID: 0}
     - target: {fileID: 4746327804846008717, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
       propertyPath: m_Name

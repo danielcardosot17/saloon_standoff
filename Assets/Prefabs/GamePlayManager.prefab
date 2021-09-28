@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2353698459338320019}
   m_Layer: 0
-  m_Name: spawn (5)
+  m_Name: spawn_1
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4746327804846008718}
-  m_RootOrder: 5
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3662143776047578384
 GameObject:
@@ -40,7 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5412499789998834636}
   m_Layer: 0
-  m_Name: spawn (1)
+  m_Name: spawn_2
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -58,7 +58,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4746327804846008718}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4219741057437762591
 GameObject:
@@ -70,7 +70,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1315326132712700022}
   m_Layer: 0
-  m_Name: spawn (3)
+  m_Name: spawn_4
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -88,7 +88,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4746327804846008718}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4746327804846008717
 GameObject:
@@ -120,11 +120,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4537736775615059898}
-  - {fileID: 5412499789998834636}
-  - {fileID: 3065125387160386162}
-  - {fileID: 1315326132712700022}
-  - {fileID: 1432430889737760012}
   - {fileID: 2353698459338320019}
+  - {fileID: 5412499789998834636}
+  - {fileID: 1432430889737760012}
+  - {fileID: 1315326132712700022}
+  - {fileID: 3065125387160386162}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -143,11 +143,11 @@ MonoBehaviour:
   prefabLocation: Player
   spawnLocations:
   - {fileID: 4537736775615059898}
-  - {fileID: 5412499789998834636}
-  - {fileID: 3065125387160386162}
-  - {fileID: 1315326132712700022}
-  - {fileID: 1432430889737760012}
   - {fileID: 2353698459338320019}
+  - {fileID: 5412499789998834636}
+  - {fileID: 1432430889737760012}
+  - {fileID: 1315326132712700022}
+  - {fileID: 3065125387160386162}
 --- !u!114 &457859446901583077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,7 +180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3065125387160386162}
   m_Layer: 0
-  m_Name: spawn (2)
+  m_Name: spawn_5
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -198,7 +198,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4746327804846008718}
-  m_RootOrder: 2
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6784863913246023534
 GameObject:
@@ -210,7 +210,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1432430889737760012}
   m_Layer: 0
-  m_Name: spawn (4)
+  m_Name: spawn_3
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -228,7 +228,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4746327804846008718}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7906122144622332324
 PrefabInstance:
@@ -239,7 +239,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3923424488245178214, guid: e848d1eb6b9fe4e418da50a19dc8d30a, type: 3}
       propertyPath: m_Name
-      value: spawn
+      value: spawn_0
       objectReference: {fileID: 0}
     - target: {fileID: 5999207834679729694, guid: e848d1eb6b9fe4e418da50a19dc8d30a, type: 3}
       propertyPath: m_RootOrder
