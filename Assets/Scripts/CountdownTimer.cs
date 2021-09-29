@@ -8,6 +8,9 @@ public class CountdownTimer : MonoBehaviour
 {
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private float countdowTime;
+    [SerializeField] private float preTime;
+    [SerializeField] private string getReadyText;
+    [SerializeField] private string goActionText;
     [SerializeField] private string readySound;
     [SerializeField] private string goSound;
     private float timeLeft;
@@ -29,9 +32,9 @@ public class CountdownTimer : MonoBehaviour
 
     public void ResetCountdown()
     {
-        tickSeconds = (int) countdowTime;
+        tickSeconds = (int) preTime;
         timeLeft = countdowTime;
-        timerText.text = timeLeft.ToString("0");
+        timerText.text = getReadyText;
     }
 
     private IEnumerator CountdownCorroutine()
@@ -48,7 +51,7 @@ public class CountdownTimer : MonoBehaviour
             yield return null;
         }
         timeLeft = 0f;
-        timerText.text = timeLeft.ToString("0");
+        timerText.text = goActionText;
         PlayGoSound();
     }
 
