@@ -21,6 +21,10 @@ public class MenuController : MonoBehaviourPunCallbacks
     {
         enterGameMenu.gameObject.SetActive(true);
         enterGameMenu.UpdatePlayerConnectedCount();
+        if(!AudioManager.Instance.IsPlaying("EnterGameMusic"))
+        {
+            AudioManager.Instance.PlayDelayed("EnterGameMusic");
+        }
     }
 
     public override void OnJoinedRoom()
@@ -42,12 +46,14 @@ public class MenuController : MonoBehaviourPunCallbacks
 
     public void ExitLobby()
     {
+        AudioManager.Instance.PlayDelayed("Click1");
         NetworkManager.Instance.ExitLobby();
         ChangeMenu(enterGameMenu.gameObject);
     }
 
     public void StartGame(string gameSceneName)
     {
+        AudioManager.Instance.PlayDelayed("Click1");
         NetworkManager.Instance.photonView.RPC("StartGame",RpcTarget.All, gameSceneName);
     }
 }

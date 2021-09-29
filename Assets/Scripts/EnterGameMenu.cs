@@ -17,12 +17,14 @@ public class EnterGameMenu : MonoBehaviour
     
     public void CreateRoom()
     {
+        AudioManager.Instance.PlayDelayed("Click1");
         NetworkManager.Instance.CreateRoom(roomName.text);
         NetworkManager.Instance.SetUsername(userName.text);
     }
 
     public void JoinRoom()
     {
+        AudioManager.Instance.PlayDelayed("Click2");
         NetworkManager.Instance.JoinRoom(roomName.text);
         NetworkManager.Instance.SetUsername(userName.text);
     }

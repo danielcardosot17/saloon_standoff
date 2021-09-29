@@ -15,8 +15,8 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     [SerializeField] private string[] prefabLocations;
     [SerializeField] private Transform[] spawnLocations;
     private int playersInGame = 0;
-    public List<PlayerController> Players { get => players; private set => players = value; }
     private List<PlayerController> players;
+    public List<PlayerController> Players { get => players; private set => players = value; }
 
     void Awake()
     {
@@ -32,7 +32,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 
     private void Start() {
         photonView.RPC("AddPlayer", RpcTarget.AllBuffered);
-        Players = new List<PlayerController>(); 
+        players = new List<PlayerController>(); 
     }
 
     [PunRPC]
@@ -48,7 +48,6 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     private void CreatePlayer()
     {
         var prefab = prefabLocations[PhotonNetwork.LocalPlayer.GetPlayerNumber()] + "/Player_" + Random.Range(0,numberOfPlayerSprites);
-        print("aaaaaaaaaaaaaa" + prefab);
         var playerObj = PhotonNetwork.Instantiate(prefab, spawnLocations[PhotonNetwork.LocalPlayer.GetPlayerNumber()].position, Quaternion.identity);
         var player = playerObj.GetComponent<PlayerController>();
         player.photonView.RPC("InitializePlayer", RpcTarget.All, PhotonNetwork.LocalPlayer);
