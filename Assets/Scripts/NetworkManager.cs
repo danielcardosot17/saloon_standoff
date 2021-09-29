@@ -73,6 +73,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void StartGame(string gameSceneName)
     {
+        AudioManager.Instance.StopAllExcept();
         PhotonNetwork.LoadLevel(gameSceneName);
     }
 

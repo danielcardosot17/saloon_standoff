@@ -14,7 +14,7 @@ public class LobbyMenu : MonoBehaviourPunCallbacks
     public void UpdatePlayerList()
     {
         playerList.text = NetworkManager.Instance.GetPlayerlist();
-        startGameBtn.interactable = NetworkManager.Instance.IsMasterClient();
+        startGameBtn.interactable = NetworkManager.Instance.IsMasterClient() && PhotonNetwork.PlayerList.Length >= 2;
     }
 
 }
