@@ -18,7 +18,7 @@ public class CountdownTimer : MonoBehaviour
     private float readyLength;
     private float goLength;
 
-    private void Awake()
+    private void Start()
     {
         readyLength = AudioManager.Instance.GetClipLength(readySound);
         goLength = AudioManager.Instance.GetClipLength(goSound);
@@ -27,12 +27,14 @@ public class CountdownTimer : MonoBehaviour
 
     public void StartCountdown()
     {
-        StartCoroutine(CountdownCorroutine());
+        StartCoroutine(DoAfterTimeCoroutine(preTime,() => {
+            StartCoroutine(CountdownCorroutine());
+        }));
     }
 
     public void ResetCountdown()
     {
-        tickSeconds = (int) preTime;
+        tickSeconds = (int) countdowTime;
         timeLeft = countdowTime;
         timerText.text = getReadyText;
     }
@@ -41,13 +43,13 @@ public class CountdownTimer : MonoBehaviour
     {
         while(timeLeft - Time.deltaTime > 0)
         {
-            timeLeft -= Time.deltaTime;
             if((int) (timeLeft - readyLength) < tickSeconds)
             {
+                timerText.text = tickSeconds.ToString("0");
                 PlayReadySound();
                 tickSeconds = (int) (timeLeft - readyLength);
             }
-            timerText.text = timeLeft.ToString("0");
+            timeLeft -= Time.deltaTime;
             yield return null;
         }
         timeLeft = 0f;
@@ -62,5 +64,10 @@ public class CountdownTimer : MonoBehaviour
     private void PlayGoSound()
     {
         AudioManager.Instance.PlayDelayed(goSound);
+    }
+    public static IEnumerator DoAfterTimeCoroutine(float time, Action action)
+    {
+        yield return new WaitForSeconds(time);
+        action();
     }
 }

@@ -147,7 +147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 25047211}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.75, y: -0.75, z: -1}
+  m_LocalPosition: {x: -2.75, y: -0.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1887677085}
@@ -177,7 +177,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 35816946}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.5, z: -1}
+  m_LocalPosition: {x: 0, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1516834985}
@@ -211,7 +211,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &59800735
 PrefabInstance:
@@ -238,7 +238,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999207834679729694, guid: e848d1eb6b9fe4e418da50a19dc8d30a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5999207834679729694, guid: e848d1eb6b9fe4e418da50a19dc8d30a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -342,6 +342,7 @@ GameObject:
   m_Component:
   - component: {fileID: 762302107}
   - component: {fileID: 762302108}
+  - component: {fileID: 762302109}
   m_Layer: 0
   m_Name: BattleSystem
   m_TagString: Untagged
@@ -375,7 +376,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3175b773ca31a4a873d48baebc41ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  countDownTimer: {fileID: 909440098}
+  countDownTimer: {fileID: 762302109}
+  resultsTime: 3
+  maxBulletCount: 1
+--- !u!114 &762302109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762302106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb2cbf10d69f3644aa6a8a68ce7629aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerText: {fileID: 1926248946}
+  countdowTime: 5
+  preTime: 3
+  getReadyText: Get Ready...
+  goActionText: Action!
+  readySound: CountdownReady
+  goSound: CountdownGo
 --- !u!1 &909440093
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,7 +410,6 @@ GameObject:
   - component: {fileID: 909440096}
   - component: {fileID: 909440095}
   - component: {fileID: 909440094}
-  - component: {fileID: 909440098}
   m_Layer: 5
   m_Name: CountdownCanvas
   m_TagString: Untagged
@@ -471,29 +492,13 @@ RectTransform:
   - {fileID: 1926248945}
   - {fileID: 1101073419}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &909440098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 909440093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb2cbf10d69f3644aa6a8a68ce7629aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timerText: {fileID: 1926248946}
-  countdowTime: 5
-  readySound: CountdownReady
-  goSound: CountdownGo
 --- !u!1 &985179236
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,7 +523,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 985179236}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.25, y: 0.75, z: -1}
+  m_LocalPosition: {x: 2.25, y: 0.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1887677085}
@@ -548,7 +553,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1060323743}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.25, y: -0.75, z: -1}
+  m_LocalPosition: {x: 2.25, y: -0.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1516834985}
@@ -578,7 +583,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1100727610}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.25, y: 0.75, z: -1}
+  m_LocalPosition: {x: 2.25, y: 0.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1516834985}
@@ -675,7 +680,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5999207834679729694, guid: e848d1eb6b9fe4e418da50a19dc8d30a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5999207834679729694, guid: e848d1eb6b9fe4e418da50a19dc8d30a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -797,7 +802,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1300727350}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.75, y: 0.75, z: -1}
+  m_LocalPosition: {x: -2.75, y: 0.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1887677085}
@@ -837,7 +842,7 @@ MonoBehaviour:
   eventCallback:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 909440098}
+      - m_Target: {fileID: 762302109}
         m_TargetAssemblyTypeName: CountdownTimer, Assembly-CSharp
         m_MethodName: ResetCountdown
         m_Mode: 1
@@ -959,7 +964,7 @@ MonoBehaviour:
   eventCallback:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 909440098}
+      - m_Target: {fileID: 762302109}
         m_TargetAssemblyTypeName: CountdownTimer, Assembly-CSharp
         m_MethodName: StartCountdown
         m_Mode: 1
@@ -1009,7 +1014,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1486754445}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.75, y: 0.75, z: -1}
+  m_LocalPosition: {x: -2.75, y: 0.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1516834985}
@@ -1049,7 +1054,7 @@ Transform:
   - {fileID: 1100727611}
   - {fileID: 1720862312}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1639594721
 GameObject:
@@ -1075,7 +1080,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1639594721}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.5, z: -1}
+  m_LocalPosition: {x: 0, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1887677085}
@@ -1105,7 +1110,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1720862311}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.75, y: -0.75, z: -1}
+  m_LocalPosition: {x: -2.75, y: -0.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1516834985}
@@ -1202,7 +1207,7 @@ Transform:
   - {fileID: 985179237}
   - {fileID: 25047212}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1926248944
 GameObject:
@@ -1362,7 +1367,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1958554220}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.25, y: -0.75, z: -1}
+  m_LocalPosition: {x: 2.25, y: -0.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1887677085}
@@ -1449,7 +1454,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4746327804846008718, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4746327804846008718, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
       propertyPath: m_LocalPosition.x

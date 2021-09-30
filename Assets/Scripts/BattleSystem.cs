@@ -6,14 +6,11 @@ using UnityEngine;
 
 public enum BattleState { COUNTDOWN, PLAYERACTION, RESULT, WIN, LOSE}
 public enum BattleMode { DEFAULT }
-public enum PlayerState { ALIVE, DEAD }
-public enum PlayerActions { IDLE, LOAD, SHOOT, DODGE }
-public enum PlayerPosition { INITIAL, MIDLE, FINAL }
 public enum CageState { NORMAL, BROKEN }
 public class BattleSystem : MonoBehaviour
 {
     [SerializeField] private CountdownTimer countDownTimer;
-    [SerializeField] private TMP_Text timerText;
+    [SerializeField] private float resultsTime;
     [SerializeField] private int maxBulletCount;
     public int MaxBulletCount { get => maxBulletCount; private set => maxBulletCount = value; }
     private List<PlayerController> players;
@@ -38,6 +35,7 @@ public class BattleSystem : MonoBehaviour
 
     void Start()
     {
+        players = new List<PlayerController>(); 
         if(BattleSystem.Instance.BattleMode == BattleMode.DEFAULT)
         {
             MaxBulletCount = 1;
@@ -58,6 +56,8 @@ public class BattleSystem : MonoBehaviour
 
     void Update()
     {
-        
+        // StartCountDown();
+        // GetPlayersActions();
+        // CalculateResults();
     }
 }
