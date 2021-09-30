@@ -372,3 +372,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerName: {fileID: 5517278006106435365}
+  midPos: {fileID: 0}
+  finalPos: {fileID: 0}

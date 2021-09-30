@@ -17,6 +17,10 @@ public class CountdownTimer : MonoBehaviour
     private int tickSeconds;
     private float readyLength;
     private float goLength;
+    private bool isCounting = false;
+    private bool finishedCounting = false;
+    public bool IsCounting { get => isCounting; private set => isCounting = value; }
+    public bool FinishedCounting { get => finishedCounting; private set => finishedCounting = value; }
 
     private void Start()
     {
@@ -27,6 +31,7 @@ public class CountdownTimer : MonoBehaviour
 
     public void StartCountdown()
     {
+        isCounting = true;
         StartCoroutine(DoAfterTimeCoroutine(preTime,() => {
             StartCoroutine(CountdownCorroutine());
         }));
@@ -34,6 +39,8 @@ public class CountdownTimer : MonoBehaviour
 
     public void ResetCountdown()
     {
+        finishedCounting = false;
+        isCounting = false;
         tickSeconds = (int) countdowTime;
         timeLeft = countdowTime;
         timerText.text = getReadyText;
@@ -55,6 +62,8 @@ public class CountdownTimer : MonoBehaviour
         timeLeft = 0f;
         timerText.text = goActionText;
         PlayGoSound();
+        finishedCounting = true;
+        isCounting = false;
     }
 
     private void PlayReadySound()

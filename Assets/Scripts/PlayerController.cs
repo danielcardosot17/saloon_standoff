@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] private Transform midPos;
     [SerializeField] private Transform finalPos;
     private Player photonPlayer;
+    private string nickName;
+    public string NickName { get => nickName; private set => nickName = value; }
+    
     private int playerId;
     private int playerNumber;
     private PlayerActions action;
@@ -27,10 +30,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private bool isDead = false;
     public bool IsDead { get => isDead; private set => isDead = value; }
 
+    private GameObject target = null; // might be the cage
+    public GameObject Target { get => target; private set => target = value; }
+
     [PunRPC]
     private void InitializePlayer(Player player)
     {
         photonPlayer = player;
+        nickName = photonPlayer.NickName;
         playerId = player.ActorNumber;
         playerNumber = PhotonNetwork.LocalPlayer.GetPlayerNumber();
         GameplayManager.Instance.Players.Add(this);
@@ -48,19 +55,25 @@ public class PlayerController : MonoBehaviourPunCallbacks
     void Start()
     {
         ResetAction();
-        IsDead = false;
+        isDead = false;
+        target = null;
         bulletCount = 0;
         maxBulletCount = BattleSystem.Instance.MaxBulletCount;
     }
 
     void Update()
     {
-        
+        //only accepts input while countdown
+        if(BattleSystem.Instance.BattleState == BattleState.COUNTDOWN)
+        {
+
+        }
     }
 
     private void ResetAction()
     {
         action = PlayerActions.IDLE;
+        target = null;
     }
 
     private void LoadAction()
@@ -82,8 +95,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
         throw new NotImplementedException();
     }
 
-    private void ShootAction()
+    private void ShootAction(GameObject target)
     {
         action = PlayerActions.SHOOT;
+        this.target = target;
     }
 }
