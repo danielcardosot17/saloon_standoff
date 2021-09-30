@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7319969372183449955}
   - component: {fileID: 409194855253008776}
   - component: {fileID: 5517278006106435365}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: UsernameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,12 +92,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.5
-  m_fontSizeBase: 0.5
+  m_fontSize: 0.7
+  m_fontSizeBase: 0.7
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 0.5
+  m_fontSizeMax: 0.7
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -106,7 +106,7 @@ MonoBehaviour:
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
+  m_paragraphSpacing: -100
   m_charWidthMaxAdj: 0
   m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 3442808045132769309}
   - component: {fileID: 1885169704207670555}
   - component: {fileID: 3823508277922724921}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: UsernameCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,8 +247,9 @@ GameObject:
   - component: {fileID: 8474570053927904318}
   - component: {fileID: 8474570053927904319}
   - component: {fileID: 8474570053927904312}
-  m_Layer: 0
-  m_Name: Player_1
+  - component: {fileID: 7130014398454901606}
+  m_Layer: 3
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -309,7 +310,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 4
-  m_Sprite: {fileID: 2233958292106796022, guid: 73f1fc2b6d782804ebd59758d540b0fd, type: 3}
+  m_Sprite: {fileID: -2882127915511354701, guid: ecaea1746ae9dea4bafa1f7d548d3902, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -372,5 +373,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerName: {fileID: 5517278006106435365}
-  midPos: {fileID: 0}
-  finalPos: {fileID: 0}
+  playerLayer: 3
+  playerSprites:
+  - sprites:
+    - {fileID: -2882127915511354701, guid: ecaea1746ae9dea4bafa1f7d548d3902, type: 3}
+    - {fileID: -2950356932701896325, guid: 73f1fc2b6d782804ebd59758d540b0fd, type: 3}
+  - sprites:
+    - {fileID: -4806783914504754779, guid: ecaea1746ae9dea4bafa1f7d548d3902, type: 3}
+    - {fileID: 2233958292106796022, guid: 73f1fc2b6d782804ebd59758d540b0fd, type: 3}
+  - sprites:
+    - {fileID: -2070576001067699498, guid: ecaea1746ae9dea4bafa1f7d548d3902, type: 3}
+    - {fileID: -2256896940446587491, guid: 73f1fc2b6d782804ebd59758d540b0fd, type: 3}
+  - sprites:
+    - {fileID: 2283449507259705960, guid: ecaea1746ae9dea4bafa1f7d548d3902, type: 3}
+    - {fileID: 8245834183637985755, guid: 73f1fc2b6d782804ebd59758d540b0fd, type: 3}
+  - sprites:
+    - {fileID: -5087320955905108062, guid: ecaea1746ae9dea4bafa1f7d548d3902, type: 3}
+    - {fileID: -3376731010895077637, guid: 73f1fc2b6d782804ebd59758d540b0fd, type: 3}
+  - sprites:
+    - {fileID: -728724350819773953, guid: ecaea1746ae9dea4bafa1f7d548d3902, type: 3}
+    - {fileID: 8864745471484268293, guid: 73f1fc2b6d782804ebd59758d540b0fd, type: 3}
+--- !u!61 &7130014398454901606
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6502641195717014695}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.5, y: 2.5}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.5, y: 2.5}
+  m_EdgeRadius: 0

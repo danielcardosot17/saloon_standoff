@@ -12,9 +12,11 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private CountdownTimer countDownTimer;
     [SerializeField] private float resultsTime;
     [SerializeField] private int maxBulletCount;
+    [SerializeField] private int maxMoveFoward;
     [SerializeField] private GameObject victoryCanvas;
     [SerializeField] private TMP_Text winnerText;
     public int MaxBulletCount { get => maxBulletCount; private set => maxBulletCount = value; }
+    public int MaxMoveFoward { get => maxMoveFoward; private set => maxMoveFoward = value; }
 
     private PlayerController winner;
     private List<PlayerController> players;
@@ -66,7 +68,6 @@ public class BattleSystem : MonoBehaviour
 
     void Update()
     {
-        print(battleState);
         switch(battleState)
         {
             case BattleState.COUNTDOWN:
@@ -103,17 +104,17 @@ public class BattleSystem : MonoBehaviour
 
     private void VictoryCondition()
     {
-        // throw new NotImplementedException();
+        
     }
 
     private void CalculateResults()
     {
-        // throw new NotImplementedException();
+        ResetPlayersActions();
     }
 
     private void GetPlayersActions()
     {
-        // throw new NotImplementedException();
+        
     }
 
     private void StartCountDown()
@@ -139,6 +140,14 @@ public class BattleSystem : MonoBehaviour
         dodgePlayers.Clear();
         loadPlayers.Clear();
         targetPlayers.Clear();
+    }
+
+    private void ResetPlayersActions()
+    {
+        foreach(PlayerController player in players)
+        {
+            player.ResetAction();
+        }
     }
 
 }

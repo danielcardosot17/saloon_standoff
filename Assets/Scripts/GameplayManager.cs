@@ -10,9 +10,7 @@ using Random = UnityEngine.Random;
 public class GameplayManager : MonoBehaviourPunCallbacks
 {
     public static GameplayManager Instance {get; private set;}
-
-    [SerializeField] private int numberOfPlayerSprites;
-    [SerializeField] private string[] prefabLocations;
+    [SerializeField] private string prefabLocation;
     [SerializeField] private Transform[] spawnLocations;
     private int playersInGame = 0;
     private List<PlayerController> players;
@@ -41,15 +39,19 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         playersInGame++;
         if(playersInGame == PhotonNetwork.PlayerList.Length)
         {
+            print("aaaaaaaa");
             CreatePlayer();
         }
     }
 
     private void CreatePlayer()
     {
-        var prefab = prefabLocations[PhotonNetwork.LocalPlayer.GetPlayerNumber()] + "/Player_" + Random.Range(0,numberOfPlayerSprites);
-        var playerObj = PhotonNetwork.Instantiate(prefab, spawnLocations[PhotonNetwork.LocalPlayer.GetPlayerNumber()].position, Quaternion.identity);
+        var playerObj = PhotonNetwork.Instantiate(prefabLocation, spawnLocations[PhotonNetwork.LocalPlayer.GetPlayerNumber()].position, Quaternion.identity);
         var player = playerObj.GetComponent<PlayerController>();
-        player.photonView.RPC("InitializePlayer", RpcTarget.All, PhotonNetwork.LocalPlayer);
+        var spriteNumber = Random.Range(0,player.PlayerSprites[PhotonNetwork.LocalPlayer.GetPlayerNumber()].sprites.Length);
+        print("cccccccccccccc");
+        print(PhotonNetwork.LocalPlayer.NickName);
+        print(spriteNumber);
+        player.photonView.RPC("InitializePlayer", RpcTarget.All, PhotonNetwork.LocalPlayer, spriteNumber);
     }
 }
