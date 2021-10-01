@@ -7,7 +7,7 @@ using UnityEngine;
 public class CountdownTimer : MonoBehaviour
 {
     [SerializeField] private TMP_Text timerText;
-    [SerializeField] private float countdowTime;
+    [SerializeField] private float countdownTime;
     [SerializeField] private float preTime;
     [SerializeField] private string getReadyText;
     [SerializeField] private string goActionText;
@@ -41,8 +41,8 @@ public class CountdownTimer : MonoBehaviour
     {
         finishedCounting = false;
         isCounting = false;
-        tickSeconds = (int) countdowTime;
-        timeLeft = countdowTime;
+        tickSeconds = (int) countdownTime;
+        timeLeft = countdownTime;
         timerText.text = getReadyText;
     }
 

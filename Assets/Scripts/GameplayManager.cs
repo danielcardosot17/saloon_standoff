@@ -39,7 +39,6 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         playersInGame++;
         if(playersInGame == PhotonNetwork.PlayerList.Length)
         {
-            print("aaaaaaaa");
             CreatePlayer();
         }
     }
@@ -49,9 +48,6 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         var playerObj = PhotonNetwork.Instantiate(prefabLocation, spawnLocations[PhotonNetwork.LocalPlayer.GetPlayerNumber()].position, Quaternion.identity);
         var player = playerObj.GetComponent<PlayerController>();
         var spriteNumber = Random.Range(0,player.PlayerSprites[PhotonNetwork.LocalPlayer.GetPlayerNumber()].sprites.Length);
-        print("cccccccccccccc");
-        print(PhotonNetwork.LocalPlayer.NickName);
-        print(spriteNumber);
         player.photonView.RPC("InitializePlayer", RpcTarget.All, PhotonNetwork.LocalPlayer, spriteNumber);
     }
 }

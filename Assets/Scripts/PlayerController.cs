@@ -15,6 +15,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] private TMP_Text playerName;
     [SerializeField] private int playerLayer;
     [SerializeField] private PlayerSprite[] playerSprites;
+    [SerializeField] private GameObject targetCrossHair;
+    [SerializeField] private Vector3 crossHairOffset;
+    [SerializeField] private float moveTime;
+    
+    [Range(1,3)]
+    [SerializeField] private int maxMoveFoward = 2;
+    [SerializeField] private Vector3[] finalPositions;
     private Player photonPlayer;
     private string nickName;
     public string NickName { get => nickName; private set => nickName = value; }
@@ -26,31 +33,29 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private int bulletCount = 0;
     private int maxBulletCount;
     public int BulletCount { get => bulletCount; private set => bulletCount = value; }
-    private int maxMoveFoward;
     private bool isDead = false;
     public bool IsDead { get => isDead; private set => isDead = value; }
 
     private GameObject target = null; // might be the cage
     public GameObject Target { get => target; private set => target = value; }
+    
+    private Vector3 moveStep; // not include spawns
+    private int nextPosition = 0;
+
     public PlayerSprite[] PlayerSprites { get => playerSprites; private set => playerSprites = value; }
 
     [PunRPC]
     private void InitializePlayer(Player player, int spriteNumber)
     {
-        print("bbbbbbb");
-        print(player.NickName);
-        print(spriteNumber);
-        print(PhotonNetwork.LocalPlayer.GetPlayerNumber());
-        print(player.GetPlayerNumber());
         photonPlayer = player;
         nickName = photonPlayer.NickName;
         playerId = player.ActorNumber;
         playerNumber = player.GetPlayerNumber();
         ChangePlayerSprite(spriteNumber);
+        moveStep = (finalPositions[playerNumber] - transform.position)/maxMoveFoward;
         GameplayManager.Instance.Players.Add(this);
         BattleSystem.Instance.Players.Add(this);
         playerName.text = player.NickName;
-        if(!photonView.IsMine) DisablePlayer(this);
     }
 
     private void ChangePlayerSprite(int spriteNumber)
@@ -60,6 +65,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void DisablePlayer(PlayerController player)
     {
+        // cant disable like this otherwise script wont work. Only in death may disable
+        player.GetComponent<Collider2D>().enabled = false;
         player.enabled = false;
     }
 
@@ -68,28 +75,28 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         ResetAction();
         isDead = false;
-        target = null;
         bulletCount = 0;
+        nextPosition = 0;
         maxBulletCount = BattleSystem.Instance.MaxBulletCount;
     }
 
     void Update()
     {
-        if(!isDead)
+        if(!isDead && photonView.IsMine)
         {
             //only accepts input while countdown
-            // if(BattleSystem.Instance.BattleState == BattleState.COUNTDOWN)
-            // {
-                if(Input.GetKey(KeyCode.Space))
-                {
-                    DodgeAction();
-                }
+            if(BattleSystem.Instance.BattleState == BattleState.COUNTDOWN)
+            {
                 if(Input.GetKey(KeyCode.R))
                 {
                     LoadAction();
                 }
+                if(Input.GetKey(KeyCode.Space))
+                {
+                    DodgeAction();
+                }
                 ShootActionCheck();
-            // }
+            }
         }
     }
 
@@ -103,6 +110,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         // #if UNITY_EDITOR
         if(Input.GetMouseButtonDown(0))
         {
+            print("bbbbbbbbbb");
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             ShootCollisionCheck(ray);
         }
@@ -116,48 +124,209 @@ public class PlayerController : MonoBehaviourPunCallbacks
         hit = Physics2D.Raycast(ray.origin, ray.direction, 20f, playerLayerMask);
         if(hit.collider != null)
         {
+            print("ccccccccccc");
             ShootAction(hit.collider.gameObject);
         }
     }
 
+
+    // public void DoAction()
+    // {
+    //     switch(action)
+    //     {
+    //         case PlayerActions.IDLE:
+    //         {
+    //             break;
+    //         }
+    //         case PlayerActions.LOAD:
+    //         {
+    //             Load();
+    //             break;
+    //         }
+    //         case PlayerActions.DODGE:
+    //         {
+    //             Dodge();
+    //             break;
+    //         }
+    //         case PlayerActions.SHOOT:
+    //         {
+    //             Shoot();
+    //             break;
+    //         }
+    //         default: break;
+    //     }
+    // }
+
     public void ResetAction()
     {
+        print("ResetAction");
         action = PlayerActions.IDLE;
-        target = null;
+        DisableCrosshair();
     }
 
 
     private void LoadAction()
     {
+        print("LoadAction");
         action = PlayerActions.LOAD;
+        DisableCrosshair();
+    }
+
+    public void Load()
+    {
+        print("Load");
+        LoadAnimation();
+        print(bulletCount);
         if(bulletCount < maxBulletCount)
         {
             bulletCount++;
+            UpdateBulletCanvas();
         }
+        print(bulletCount);
+        ResetAction();
     }
 
-    private void DodgeAction()
+    private void LoadAnimation()
     {
-        action = PlayerActions.DODGE;
-        MoveFoward();
+        PlayRandomLoadAudio();
     }
 
-    private void MoveFoward()
+    private void UpdateBulletCanvas()
     {
         
     }
 
-    private void ShootAction(GameObject target)
+    private void DodgeAction()
     {
-        action = PlayerActions.SHOOT;
-        this.target = target;
+        print("DodgeAction");
+        action = PlayerActions.DODGE;
+        DisableCrosshair();
     }
 
+    public void Dodge()
+    {
+        print("Dodge");
+        if(nextPosition < maxMoveFoward)
+        {
+            MoveFoward();
+            nextPosition++;
+        }
+        else
+        {
+            GetCocktail();
+        }
+        ResetAction();
+    }
+
+    private void GetCocktail()
+    {
+        
+    }
+
+    public void MoveFoward()
+    {
+        StartCoroutine(LerpPosition(transform.position + moveStep, moveTime));
+    }
+
+    private void ShootAction(GameObject target)
+    {
+        print("ShootAction");
+        this.target = target;
+        PutCrosshairOnTarget();
+        action = PlayerActions.SHOOT;
+    }
+
+    public void Shoot()
+    {
+        print("Shoot");
+        bulletCount--;
+        UpdateBulletCanvas();
+        ShootAnimation();
+        ResetAction();
+    }
+    public void DryShoot()
+    {
+        print("DryShoot");
+        DryShootAnimation();
+        ResetAction();
+    }
+
+    private void DryShootAnimation()
+    {
+        PlayDryShotAudio();
+    }
+
+    private void ShootAnimation()
+    {
+        PlayShotAudio();
+    }
+
+
+    private void PutCrosshairOnTarget()
+    {
+        targetCrossHair.transform.position = target.transform.position + crossHairOffset;
+        EnableCrosshair();
+    }
+
+    private void EnableCrosshair()
+    {
+        targetCrossHair.SetActive(true);
+    }
+
+    private void DisableCrosshair()
+    {
+        targetCrossHair.SetActive(false);
+        target = null;
+    }
+    
     public void Die()
     {
+        PlayDeathAudio();
         isDead = true;
         playerName.text += "\n" + "DEAD";
         this.GetComponent<SpriteRenderer>().color = Color.red;
+        ResetAction();
+        this.enabled = false;
         DisablePlayer(this);
+    }
+
+    // All audio will be RPC, so other players may hear loading shooting and dodging
+    private void PlayDeathAudio()
+    {
+        
+    }
+    
+    private void PlayShotAudio()
+    {
+        
+    }
+
+    private void PlayDryShotAudio()
+    {
+        
+    }
+
+    public void PlayRandomDodgeAudio()
+    {
+        
+    }
+
+    private void PlayRandomLoadAudio()
+    {
+        
+    }
+
+    IEnumerator LerpPosition(Vector3 targetPosition, float duration)
+    {
+        float time = 0;
+        Vector3 startPosition = transform.position;
+
+        while (time < duration)
+        {
+            transform.position = Vector3.Lerp(startPosition, targetPosition, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = targetPosition;
     }
 }

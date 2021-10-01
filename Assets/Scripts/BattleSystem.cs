@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public enum BattleState { COUNTDOWN, PLAYERACTION, RESULT, END}
+public enum BattleState { START, COUNTDOWN, PLAYERACTION, RESULT, END}
 public enum BattleMode { DEFAULT }
 public enum CageState { NORMAL, BROKEN }
 public class BattleSystem : MonoBehaviour
 {
-    [SerializeField] private CountdownTimer countDownTimer;
+    [SerializeField] private CountdownTimer countdownTimer;
     [SerializeField] private float resultsTime;
     [SerializeField] private int maxBulletCount;
     [SerializeField] private int maxMoveFoward;
@@ -30,7 +30,8 @@ public class BattleSystem : MonoBehaviour
     private List<PlayerController> shootPlayers;
     private List<PlayerController> dodgePlayers;
     private List<PlayerController> loadPlayers;
-    private List<PlayerController> targetPlayers;
+    private List<GameObject> targetObjects;
+    private CageState cageState;
 
     public static BattleSystem Instance;
     void Awake()
@@ -47,7 +48,13 @@ public class BattleSystem : MonoBehaviour
 
     void Start()
     {
-        players = new List<PlayerController>(); 
+        cageState = CageState.NORMAL;
+        players = new List<PlayerController>();
+        idlePlayers = new List<PlayerController>();
+        loadPlayers = new List<PlayerController>();
+        shootPlayers = new List<PlayerController>();
+        dodgePlayers = new List<PlayerController>();
+        targetObjects = new List<GameObject>();
         if(BattleSystem.Instance.BattleMode == BattleMode.DEFAULT)
         {
             MaxBulletCount = 1;
@@ -57,7 +64,7 @@ public class BattleSystem : MonoBehaviour
 
     private void ResetTurn()
     {
-        countDownTimer.ResetCountdown();
+        countdownTimer.ResetCountdown();
         BattleState = BattleState.COUNTDOWN;
     }
 
@@ -70,21 +77,40 @@ public class BattleSystem : MonoBehaviour
     {
         switch(battleState)
         {
+            case BattleState.START:
+            {
+                print("START");
+                ResetPlayersActions();
+                ClearAllActionLists();
+                ChangeStateTo(BattleState.COUNTDOWN);
+                break;
+            }
             case BattleState.COUNTDOWN:
             {
-                StartCountDown();
+                StartCountdown();
                 break;
             }
             case BattleState.PLAYERACTION:
             {
+                print("PLAYERACTION");
                 // populate all those action lists
                 GetPlayersActions();
+                ChangeStateTo(BattleState.RESULT);
                 break;
             }
             case BattleState.RESULT:
             {
+                print("RESULT");
                 // compare all the action lists
+                // DoActions();
                 CalculateResults();
+                if(VictoryCondition())
+                {
+                    ChangeStateTo(BattleState.END);
+                }
+                else{
+                    ChangeStateTo(BattleState.START); // GAME LOOOOP!
+                }
                 break;
             }
             case BattleState.END:
@@ -96,39 +122,140 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    // private void DoActions()
+    // {
+    //     foreach(PlayerController player in players)
+    //     {
+    //         player.DoAction();
+    //     }
+    // }
+
+    private void CalculateResults()
+    {
+        // Who shoots first?
+        ShootFirst();
+
+        // Who DIES??
+        GetShotAndDie(); // Death scream audio
+        
+        // Who Loads??
+        LoadGun();
+
+        // Who Dodges (Moves forward)??
+        DodgeBullet();
+    }
+
+    private void ShootFirst()
+    {
+        foreach(PlayerController player in shootPlayers)
+        {
+            if(player.BulletCount > 0){
+                player.Shoot();
+            }
+            else
+            {
+                targetObjects.Remove(player.Target); //doesnt have bullets to shoot. lose the turn!
+                player.DryShoot();
+            }
+        }
+    }
+
+    private void DodgeBullet()
+    {
+        foreach(PlayerController player in dodgePlayers)
+        {
+            player.Dodge();
+            if(targetObjects.Contains(player.gameObject))
+            {
+                player.PlayRandomDodgeAudio();
+            }
+        }
+    }
+
+    private void LoadGun()
+    {
+        foreach(PlayerController player in loadPlayers)
+        {
+            if(!player.IsDead){
+                player.Load();
+            }
+        }
+    }
+
+    private void GetShotAndDie()
+    {
+        foreach(GameObject target in targetObjects)
+        {   
+            if(target.name.Equals("Cage")) // Someone shot the cage!!
+            {
+                cageState = CageState.BROKEN;
+            }
+            else
+            {
+                var targetPlayer = target.GetComponent<PlayerController>();
+                if(idlePlayers.Contains(targetPlayer) || loadPlayers.Contains(targetPlayer) || shootPlayers.Contains(targetPlayer))
+                {
+                    targetPlayer.Die();
+                }
+            }
+        }
+    }
+
     private void EndGame()
     {
         winnerText.text = winner.NickName;
         victoryCanvas.SetActive(true);
     }
 
-    private void VictoryCondition()
+    private bool VictoryCondition()
     {
-        
-    }
-
-    private void CalculateResults()
-    {
-        ResetPlayersActions();
+        return false;
     }
 
     private void GetPlayersActions()
     {
-        
+        foreach(PlayerController player in players)
+        {
+            switch(player.Action)
+            {
+                case PlayerActions.IDLE:
+                {
+                    idlePlayers.Add(player);
+                    break;
+                }
+                case PlayerActions.LOAD:
+                {
+                    loadPlayers.Add(player);
+                    break;
+                }
+                case PlayerActions.DODGE:
+                {
+                    dodgePlayers.Add(player);
+                    break;
+                }
+                case PlayerActions.SHOOT:
+                {
+                    shootPlayers.Add(player);
+                    targetObjects.Add(player.Target);
+                    break;
+                }
+                default: break;
+            }
+        }
     }
 
-    private void StartCountDown()
+    private void StartCountdown()
     {
-        if(!countDownTimer.IsCounting)
+        if(!countdownTimer.IsCounting)
         {
-            if(!countDownTimer.FinishedCounting)
+            if(!countdownTimer.FinishedCounting)
             {
-                countDownTimer.StartCountdown();
+                countdownTimer.StartCountdown();
             }
             else
             {
                 ChangeStateTo(BattleState.PLAYERACTION);
-                countDownTimer.ResetCountdown();
+                countdownTimer.ResetCountdown();
             }
         }
     }
@@ -139,7 +266,7 @@ public class BattleSystem : MonoBehaviour
         shootPlayers.Clear();
         dodgePlayers.Clear();
         loadPlayers.Clear();
-        targetPlayers.Clear();
+        targetObjects.Clear();
     }
 
     private void ResetPlayersActions()
