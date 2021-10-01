@@ -41,6 +41,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     
     private Vector3 moveStep; // not include spawns
     private int nextPosition = 0;
+    private bool gotTheCocktail = false;
+    public bool GotTheCocktail { get => gotTheCocktail; private set => gotTheCocktail = value; }
 
     public PlayerSprite[] PlayerSprites { get => playerSprites; private set => playerSprites = value; }
 
@@ -75,6 +77,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         ResetAction();
         isDead = false;
+        gotTheCocktail = false;
         bulletCount = 0;
         nextPosition = 0;
         maxBulletCount = BattleSystem.Instance.MaxBulletCount;
@@ -110,7 +113,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         // #if UNITY_EDITOR
         if(Input.GetMouseButtonDown(0))
         {
-            print("bbbbbbbbbb");
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             ShootCollisionCheck(ray);
         }
@@ -124,7 +126,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         hit = Physics2D.Raycast(ray.origin, ray.direction, 20f, playerLayerMask);
         if(hit.collider != null)
         {
-            print("ccccccccccc");
             ShootAction(hit.collider.gameObject);
         }
     }
@@ -172,17 +173,29 @@ public class PlayerController : MonoBehaviourPunCallbacks
         DisableCrosshair();
     }
 
+    // to get th cocktail the player must LOAD
+    // so the player will be vunerable
+    // and that makes DODGE a viable options still
+    // more than one player may get share the cocktail!!
     public void Load()
     {
-        print("Load");
-        LoadAnimation();
-        print(bulletCount);
-        if(bulletCount < maxBulletCount)
+        if(nextPosition < maxMoveFoward)
         {
-            bulletCount++;
-            UpdateBulletCanvas();
+            print("Load");
+            LoadAnimation();
+            print(bulletCount);
+            if(bulletCount < maxBulletCount)
+            {
+                bulletCount++;
+                UpdateBulletCanvas();
+            }
+            print(bulletCount);
         }
-        print(bulletCount);
+        else
+        {
+            print("GetCocktail");
+            GetCocktail();
+        }
         ResetAction();
     }
 
@@ -211,16 +224,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
             MoveFoward();
             nextPosition++;
         }
-        else
-        {
-            GetCocktail();
-        }
         ResetAction();
     }
 
     private void GetCocktail()
     {
-        
+        if(BattleSystem.Instance.CageState == CageState.BROKEN)
+        {
+            gotTheCocktail = true;
+        }
     }
 
     public void MoveFoward()

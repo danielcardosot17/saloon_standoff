@@ -324,8 +324,9 @@ MonoBehaviour:
   resultsTime: 3
   maxBulletCount: 1
   maxMoveFoward: 2
-  victoryCanvas: {fileID: 2140558602}
-  winnerText: {fileID: 1635309920}
+  endgameCanvas: {fileID: 2140558602}
+  endgameText: {fileID: 1635309920}
+  everybodyIsDeadText: Another one bites the dust
 --- !u!114 &762302109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1065,7 +1066,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 85.55
+  m_fontSize: 87.55
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1128,7 +1129,7 @@ GameObject:
   - component: {fileID: 2140558604}
   - component: {fileID: 2140558603}
   m_Layer: 5
-  m_Name: VictoryCanvas
+  m_Name: EndgameCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

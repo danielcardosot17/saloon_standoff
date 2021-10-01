@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -13,8 +14,9 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private float resultsTime;
     [SerializeField] private int maxBulletCount;
     [SerializeField] private int maxMoveFoward;
-    [SerializeField] private GameObject victoryCanvas;
-    [SerializeField] private TMP_Text winnerText;
+    [SerializeField] private GameObject endgameCanvas;
+    [SerializeField] private TMP_Text endgameText;
+    [SerializeField] private string everybodyIsDeadText;
     public int MaxBulletCount { get => maxBulletCount; private set => maxBulletCount = value; }
     public int MaxMoveFoward { get => maxMoveFoward; private set => maxMoveFoward = value; }
 
@@ -32,8 +34,10 @@ public class BattleSystem : MonoBehaviour
     private List<PlayerController> loadPlayers;
     private List<GameObject> targetObjects;
     private CageState cageState;
+    public CageState CageState { get => cageState; private set => cageState = value; }
 
     public static BattleSystem Instance;
+
     void Awake()
     {
         if(Instance == null){
@@ -104,7 +108,7 @@ public class BattleSystem : MonoBehaviour
                 // compare all the action lists
                 // DoActions();
                 CalculateResults();
-                if(VictoryCondition())
+                if(EndgameCondition())
                 {
                     ChangeStateTo(BattleState.END);
                 }
@@ -203,13 +207,96 @@ public class BattleSystem : MonoBehaviour
 
     private void EndGame()
     {
-        winnerText.text = winner.NickName;
-        victoryCanvas.SetActive(true);
+        if(IsEverybodyDead())
+        {
+            endgameText.text = everybodyIsDeadText;
+        }
+        else if(OnlyOneAlive())
+        {
+            foreach(PlayerController player in players)
+            {
+                if(!player.IsDead)
+                {
+                    winner = player;
+                }
+            }
+            endgameText.text = winner.NickName + " Victory!";
+        }
+        else if(SomeoneGotCocktail())
+        {
+            var endgameString = "";
+            List<string> whoGotTheCocktail = new List<string>();
+            WhoGotTheCocktail(whoGotTheCocktail);
+            if(whoGotTheCocktail.Count == 1)
+            {
+                endgameString += whoGotTheCocktail.First() + " Got the Drink!";
+            }
+            else
+            {
+                foreach(string name in whoGotTheCocktail)
+                {
+                    endgameString += name + " ";
+                }
+                endgameString += "Shared the Drink!";
+            }
+            endgameText.text = endgameString;
+        }
+        endgameCanvas.SetActive(true);
     }
 
-    private bool VictoryCondition()
+    private void WhoGotTheCocktail(List<string> whoGotTheCocktail)
     {
+        foreach(PlayerController player in players)
+        {
+            if(player.GotTheCocktail)
+            {
+                whoGotTheCocktail.Add(player.NickName);
+            } 
+        }
+    }
+
+    private bool EndgameCondition()
+    {
+        return IsEverybodyDead() || OnlyOneAlive() || SomeoneGotCocktail();
+    }
+
+    private bool SomeoneGotCocktail()
+    {
+        foreach(PlayerController player in players)
+        {
+            if(player.GotTheCocktail)
+            {
+                return true;
+            } 
+        }
         return false;
+    }
+
+    private bool OnlyOneAlive()
+    {
+        var playersAlive = 0;
+        foreach(PlayerController player in players)
+        {
+            if(!player.IsDead)
+            {
+                playersAlive++;
+            }
+        }
+        return (playersAlive == 1);
+    }
+
+    private bool IsEverybodyDead()
+    {
+        var isEverybodyDead = true;
+        foreach(PlayerController player in players)
+        {
+            if(!player.IsDead)
+            {
+                isEverybodyDead = false;
+                return isEverybodyDead;
+            }
+        }
+        return isEverybodyDead;
     }
 
     private void GetPlayersActions()
