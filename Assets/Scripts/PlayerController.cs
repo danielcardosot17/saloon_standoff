@@ -83,6 +83,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void DisablePlayer(PlayerController player)
     {
         // cant disable like this otherwise script wont work. Only in death may disable
+        DisableCrosshair();
         player.GetComponent<Collider2D>().enabled = false;
         player.enabled = false;
     }
@@ -148,34 +149,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
     }
 
-
-    // public void DoAction()
-    // {
-    //     switch(action)
-    //     {
-    //         case PlayerActions.IDLE:
-    //         {
-    //             break;
-    //         }
-    //         case PlayerActions.LOAD:
-    //         {
-    //             Load();
-    //             break;
-    //         }
-    //         case PlayerActions.DODGE:
-    //         {
-    //             Dodge();
-    //             break;
-    //         }
-    //         case PlayerActions.SHOOT:
-    //         {
-    //             Shoot();
-    //             break;
-    //         }
-    //         default: break;
-    //     }
-    // }
-
     private bool  IsTargetDead()
     {
         if(target != null)
@@ -194,7 +167,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         action = PlayerActions.IDLE;
         DisableCrosshair();
     }
-
 
     private void LoadAction()
     {
@@ -233,15 +205,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
     }
 
-    private void LoadAnimation()
-    {
-        PlayRandomLoadAudio();
-    }
-
-    private void UpdateBulletCanvas()
-    {
-        
-    }
 
     private void DodgeAction()
     {
@@ -264,6 +227,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if(BattleSystem.Instance.CageState == CageState.BROKEN)
         {
+            PlayCocktailAudio();
             gotTheCocktail = true;
         }
     }
@@ -283,6 +247,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void DisableForEndgame()
     {
+        DisableCrosshair();
         playerName.gameObject.SetActive(false);
         isDisabled = true;
     }
@@ -300,17 +265,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         print("DryShoot");
         DryShootAnimation();
     }
-
-    private void DryShootAnimation()
-    {
-        PlayDryShotAudio();
-    }
-
-    private void ShootAnimation()
-    {
-        PlayShotAudio();
-    }
-
 
     private void PutCrosshairOnTarget()
     {
@@ -331,7 +285,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     
     public void Die()
     {
-        PlayDeathAudio();
+        PlayRadomDeathAudio();
         isDead = true;
         playerName.text += "\n" + "DEAD";
         this.GetComponent<SpriteRenderer>().color = Color.red;
@@ -341,17 +295,42 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
     // All audio will be RPC, so other players may hear loading shooting and dodging
-    private void PlayDeathAudio()
+    
+    private void DryShootAnimation()
+    {
+        PlayRadomDryShotAudio();
+    }
+
+    private void ShootAnimation()
+    {
+        PlayRandomShotAudio();
+    }
+
+    private void LoadAnimation()
+    {
+        PlayRandomLoadAudio();
+    }
+
+    private void UpdateBulletCanvas()
     {
         
     }
     
-    private void PlayShotAudio()
+    private void PlayCocktailAudio()
+    {
+        
+    }
+    private void PlayRadomDeathAudio()
+    {
+        
+    }
+    
+    private void PlayRandomShotAudio()
     {
         
     }
 
-    private void PlayDryShotAudio()
+    private void PlayRadomDryShotAudio()
     {
         
     }

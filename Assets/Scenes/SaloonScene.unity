@@ -474,6 +474,8 @@ MonoBehaviour:
   achievementManager: {fileID: 1799242796}
   achievementsText: {fileID: 24019853}
   idleTime: 3
+  cage: {fileID: 1280718070}
+  cageBreakAudio: CageBreak
 --- !u!114 &762302109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,6 +494,7 @@ MonoBehaviour:
   getReadyText: Get Ready...
   goActionText: Action!
   readySound: CountdownReady
+  tickSound: CountdownTick
   goSound: CountdownGo
 --- !u!1 &909440093
 GameObject:
@@ -1121,7 +1124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 975bab4cc22237747aa67ecf8a58d37c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievementName: ...OneShotOneKill...
+  achievementName: ...One Shot One Kill...
 --- !u!114 &1799242793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1134,7 +1137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6f7fd1920360d644952091c6949c3c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievementName: ...NoBulletsNeeded...
+  achievementName: ...No Bullets Needed...
 --- !u!114 &1799242794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1147,7 +1150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afae60f134eeafb4498c49255922f47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievementName: ...FriendsWinTogether...
+  achievementName: ...Friends Win Together...
 --- !u!114 &1799242795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1160,7 +1163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5eb8251b09207534cab639c52bd1570e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievementName: ...LastManStanding...
+  achievementName: ...Last Man Standing...
 --- !u!114 &1799242796
 MonoBehaviour:
   m_ObjectHideFlags: 0

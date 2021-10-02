@@ -6,7 +6,7 @@ public class FriendsWinTogether : Achievement
 {
     public FriendsWinTogether()
     {
-        achievementName = "...FriendsWinTogether...";
+        achievementName = "...Friends Win Together...";
     }
 
     public override bool Condition()

@@ -12,10 +12,11 @@ public class CountdownTimer : MonoBehaviour
     [SerializeField] private string getReadyText;
     [SerializeField] private string goActionText;
     [SerializeField] private string readySound;
+    [SerializeField] private string tickSound;
     [SerializeField] private string goSound;
     private float timeLeft;
     private int tickSeconds;
-    private float readyLength;
+    private float tickLength;
     private float goLength;
     private bool isCounting = false;
     private bool finishedCounting = false;
@@ -24,7 +25,7 @@ public class CountdownTimer : MonoBehaviour
 
     private void Start()
     {
-        readyLength = AudioManager.Instance.GetClipLength(readySound);
+        tickLength = AudioManager.Instance.GetClipLength(tickSound);
         goLength = AudioManager.Instance.GetClipLength(goSound);
         ResetCountdown();
     }
@@ -39,6 +40,7 @@ public class CountdownTimer : MonoBehaviour
 
     public void ResetCountdown()
     {
+        PlayReadySound();
         ActivateTimerCanvas();
         finishedCounting = false;
         isCounting = false;
@@ -60,11 +62,11 @@ public class CountdownTimer : MonoBehaviour
     {
         while(timeLeft - Time.deltaTime > 0)
         {
-            if((int) (timeLeft - readyLength) < tickSeconds)
+            if((int) (timeLeft - tickLength) < tickSeconds)
             {
                 timerText.text = tickSeconds.ToString("0");
-                PlayReadySound();
-                tickSeconds = (int) (timeLeft - readyLength);
+                PlayTickSound();
+                tickSeconds = (int) (timeLeft - tickLength);
             }
             timeLeft -= Time.deltaTime;
             yield return null;
@@ -80,6 +82,12 @@ public class CountdownTimer : MonoBehaviour
     {
         AudioManager.Instance.PlayDelayed(readySound);
     }
+
+    private void PlayTickSound()
+    {
+        AudioManager.Instance.PlayDelayed(tickSound);
+    }
+
     private void PlayGoSound()
     {
         AudioManager.Instance.PlayDelayed(goSound);

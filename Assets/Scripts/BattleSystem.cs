@@ -14,7 +14,6 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private CountdownTimer countdownTimer;
     [SerializeField] private float resultsTime;
     [SerializeField] private int maxBulletCount;
-    [SerializeField] private int maxMoveFoward;
     [SerializeField] private GameObject endgameCanvas;
     [SerializeField] private TMP_Text endgameText;
     [SerializeField] private string soloVictoryText;
@@ -24,9 +23,9 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private AchievementManager achievementManager;
     [SerializeField] private TMP_Text achievementsText;
     [SerializeField] private float idleTime;
+    [SerializeField] private GameObject cage;
+    [SerializeField] private string cageBreakAudio;
     public int MaxBulletCount { get => maxBulletCount; private set => maxBulletCount = value; }
-    public int MaxMoveFoward { get => maxMoveFoward; private set => maxMoveFoward = value; }
-
     private PlayerController soloWinner;
     private PlayerController localPlayer;
     public PlayerController LocalPlayer { get => localPlayer; set => localPlayer = value; }
@@ -36,7 +35,6 @@ public class BattleSystem : MonoBehaviour
     public BattleState BattleState { get => battleState; private set => battleState = value; }
     private BattleMode battleMode = BattleMode.DEFAULT;
     public BattleMode BattleMode { get => battleMode; private set => battleMode = value; }
-
     private List<PlayerController> idlePlayers;
     private List<PlayerController> shootPlayers;
     private List<PlayerController> dodgePlayers;
@@ -65,6 +63,7 @@ public class BattleSystem : MonoBehaviour
     {
         isEnd = false;
         cageState = CageState.NORMAL;
+        cage.SetActive(true);
         players = new List<PlayerController>();
         idlePlayers = new List<PlayerController>();
         loadPlayers = new List<PlayerController>();
@@ -78,13 +77,7 @@ public class BattleSystem : MonoBehaviour
         }
         
         endgameCanvas.SetActive(false);
-        ResetTurn();
-    }
-
-    private void ResetTurn()
-    {
         countdownTimer.ResetCountdown();
-        BattleState = BattleState.COUNTDOWN;
     }
 
     private void ChangeStateTo(BattleState newState)
@@ -101,6 +94,7 @@ public class BattleSystem : MonoBehaviour
                 case BattleState.START:
                 {
                     print("START");
+                    countdownTimer.ResetCountdown();
                     ResetPlayersActions();
                     ClearAllActionLists();
                     ChangeStateTo(BattleState.COUNTDOWN);
@@ -159,14 +153,6 @@ public class BattleSystem : MonoBehaviour
             ChangeStateTo(BattleState.START); // GAME LOOOOP!
         }
     }
-
-    // private void DoActions()
-    // {
-    //     foreach(PlayerController player in players)
-    //     {
-    //         player.DoAction();
-    //     }
-    // }
 
     private void CalculateResults()
     {
@@ -238,6 +224,8 @@ public class BattleSystem : MonoBehaviour
             if(target.name.Equals("Cage")) // Someone shot the cage!!
             {
                 cageState = CageState.BROKEN;
+                cage.SetActive(false);
+                PlayCageBreakAudio();
             }
             else
             {
@@ -248,6 +236,11 @@ public class BattleSystem : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void PlayCageBreakAudio()
+    {
+        AudioManager.Instance.PlayDelayed(cageBreakAudio);
     }
 
     private void EndGame()
@@ -420,7 +413,6 @@ public class BattleSystem : MonoBehaviour
             {
                 print("COUNTDOWN");
                 ChangeStateTo(BattleState.PLAYERACTION);
-                countdownTimer.ResetCountdown();
             }
         }
     }
