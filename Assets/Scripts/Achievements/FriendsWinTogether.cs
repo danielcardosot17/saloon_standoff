@@ -11,6 +11,6 @@ public class FriendsWinTogether : Achievement
 
     public override bool Condition()
     {
-        return false;
+        return BattleSystem.Instance.PlayersWhoGotTheCocktail.Count > 1;
     }
 }

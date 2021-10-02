@@ -11,6 +11,6 @@ public class Pacifist : Achievement
 
     public override bool Condition()
     {
-        return true;
+        return BattleSystem.Instance.LocalPlayer.KillCount == 0;
     }
 }

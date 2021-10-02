@@ -6,11 +6,11 @@ public class LastManStanding : Achievement
 {
     public LastManStanding()
     {
-        achievementName = "...LastManStanding...";
+        achievementName = "...Last Man Standing...";
     }
 
     public override bool Condition()
     {
-        return true;
+        return BattleSystem.Instance.OnlyOneAlive();
     }
 }

@@ -28,6 +28,8 @@ public class BattleSystem : MonoBehaviour
     public int MaxMoveFoward { get => maxMoveFoward; private set => maxMoveFoward = value; }
 
     private PlayerController soloWinner;
+    private PlayerController localPlayer;
+    public PlayerController LocalPlayer { get => localPlayer; set => localPlayer = value; }
     private List<PlayerController> players;
     public List<PlayerController> Players { get => players; private set => players = value; }
     private BattleState battleState;
@@ -42,9 +44,10 @@ public class BattleSystem : MonoBehaviour
     private List<GameObject> targetObjects;
     private CageState cageState;
     public CageState CageState { get => cageState; private set => cageState = value; }
-
     public static BattleSystem Instance;
     private bool isEnd = false;
+    private List<string> playersWhoGotTheCocktail;
+    public List<string> PlayersWhoGotTheCocktail { get => playersWhoGotTheCocktail; set => playersWhoGotTheCocktail = value; }
 
     void Awake()
     {
@@ -68,6 +71,7 @@ public class BattleSystem : MonoBehaviour
         shootPlayers = new List<PlayerController>();
         dodgePlayers = new List<PlayerController>();
         targetObjects = new List<GameObject>();
+        playersWhoGotTheCocktail = new List<string>();
         if(BattleSystem.Instance.BattleMode == BattleMode.DEFAULT)
         {
             MaxBulletCount = 1;
@@ -177,6 +181,17 @@ public class BattleSystem : MonoBehaviour
 
         // Who Dodges (Moves forward)??
         DodgeBullet();
+
+        // Get Kill Count
+        GetPlayerKillCount();
+    }
+
+    private void GetPlayerKillCount()
+    {
+        foreach(PlayerController player in players)
+        {
+            player.GetKillCount();
+        }
     }
 
     private void ShootFirst()
@@ -253,13 +268,17 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    // Achievements will be shown individually if player wins
     private void ShowAchievements()
     {
         var text = "";
-        foreach(Achievement achievement in achievementManager.Achievements)
+        if(localPlayer.IsWinner)
         {
-            if(achievement.Condition()){
-                text += achievement.achievementName + "\n";
+            foreach(Achievement achievement in achievementManager.Achievements)
+            {
+                if(achievement.Condition()){
+                    text += achievement.achievementName + "\n";
+                }
             }
         }
         achievementsText.text = text;
@@ -278,6 +297,7 @@ public class BattleSystem : MonoBehaviour
                 if(!player.IsDead)
                 {
                     soloWinner = player;
+                    player.IsWinner = true;
                 }
             }
             endgameText.text = soloWinner.NickName + "\n" + soloVictoryText;
@@ -285,15 +305,14 @@ public class BattleSystem : MonoBehaviour
         else if(SomeoneGotCocktail())
         {
             var endgameString = "";
-            List<string> whoGotTheCocktail = new List<string>();
-            WhoGotTheCocktail(whoGotTheCocktail);
-            if(whoGotTheCocktail.Count == 1)
+            WhoGotTheCocktail();
+            if(playersWhoGotTheCocktail.Count == 1)
             {
-                endgameString += whoGotTheCocktail.First() + "\n" + gotTheDrinkText;
+                endgameString += playersWhoGotTheCocktail.First() + "\n" + gotTheDrinkText;
             }
             else
             {
-                foreach(string name in whoGotTheCocktail)
+                foreach(string name in playersWhoGotTheCocktail)
                 {
                     endgameString += name + " ";
                 }
@@ -303,13 +322,14 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    private void WhoGotTheCocktail(List<string> whoGotTheCocktail)
+    private void WhoGotTheCocktail()
     {
         foreach(PlayerController player in players)
         {
             if(player.GotTheCocktail)
             {
-                whoGotTheCocktail.Add(player.NickName);
+                playersWhoGotTheCocktail.Add(player.NickName);
+                player.IsWinner = true;
             } 
         }
     }
@@ -331,7 +351,7 @@ public class BattleSystem : MonoBehaviour
         return false;
     }
 
-    private bool OnlyOneAlive()
+    public bool OnlyOneAlive()
     {
         var playersAlive = 0;
         foreach(PlayerController player in players)

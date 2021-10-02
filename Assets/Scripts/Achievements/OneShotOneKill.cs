@@ -6,11 +6,11 @@ public class OneShotOneKill : Achievement
 {
     public OneShotOneKill()
     {
-        achievementName = "...OneShotOneKill...";
+        achievementName = "...One Shot One Kill...";
     }
 
     public override bool Condition()
     {
-        return false;
+        return BattleSystem.Instance.LocalPlayer.KillCount == BattleSystem.Instance.LocalPlayer.BulletsUsed;
     }
 }

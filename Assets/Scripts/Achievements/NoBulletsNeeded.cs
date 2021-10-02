@@ -6,11 +6,11 @@ public class NoBulletsNeeded : Achievement
 {
     public NoBulletsNeeded()
     {
-        achievementName = "...NoBulletsNeeded...";
+        achievementName = "...No Bullets Needed...";
     }
 
     public override bool Condition()
     {
-        return false;
+        return BattleSystem.Instance.LocalPlayer.BulletsUsed == 0;
     }
 }

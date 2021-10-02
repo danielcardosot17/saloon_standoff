@@ -47,6 +47,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private int nextPosition = 0;
     private bool gotTheCocktail = false;
     private bool isDisabled = false;
+    private bool isWinner = false;
+    public bool IsWinner { get => isWinner; set => isWinner = value; }
+    private bool isLocalPlayer = false;
+    public bool IsLocalPlayer { get => isLocalPlayer; set => isLocalPlayer = value; }
 
     public bool GotTheCocktail { get => gotTheCocktail; private set => gotTheCocktail = value; }
 
@@ -64,6 +68,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
         GameplayManager.Instance.Players.Add(this);
         BattleSystem.Instance.Players.Add(this);
         playerName.text = player.NickName;
+        if(photonView.IsMine)
+        {
+            isLocalPlayer = true;
+            BattleSystem.Instance.LocalPlayer = this;
+        }
     }
 
     private void ChangePlayerSprite(int spriteNumber)
@@ -84,9 +93,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
         ResetAction();
         isDead = false;
         isDisabled = false;
+        isWinner = false;
         gotTheCocktail = false;
         bulletCount = 0;
         nextPosition = 0;
+        killCount = 0;
         maxBulletCount = BattleSystem.Instance.MaxBulletCount;
     }
 
@@ -165,6 +176,18 @@ public class PlayerController : MonoBehaviourPunCallbacks
     //     }
     // }
 
+    private bool  IsTargetDead()
+    {
+        if(target != null)
+        {
+            if(!target.name.Equals("Cage")) // its a player
+            {
+                if(target.GetComponent<PlayerController>().IsDead) return true;
+            }
+        }
+        return false;
+    }
+
     public void ResetAction()
     {
         print("ResetAction");
@@ -178,6 +201,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
         print("LoadAction");
         action = PlayerActions.LOAD;
         DisableCrosshair();
+    }
+
+    public void GetKillCount()
+    {
+        if(IsTargetDead()) killCount++;
     }
 
     // to get th cocktail the player must LOAD
@@ -203,7 +231,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
             print("GetCocktail");
             GetCocktail();
         }
-        ResetAction();
     }
 
     private void LoadAnimation()
@@ -231,7 +258,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
             MoveFoward();
             nextPosition++;
         }
-        ResetAction();
     }
 
     private void GetCocktail()
@@ -265,15 +291,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         print("Shoot");
         bulletCount--;
+        bulletsUsed++;
         UpdateBulletCanvas();
         ShootAnimation();
-        ResetAction();
     }
     public void DryShoot()
     {
         print("DryShoot");
         DryShootAnimation();
-        ResetAction();
     }
 
     private void DryShootAnimation()
