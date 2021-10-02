@@ -39,11 +39,21 @@ public class CountdownTimer : MonoBehaviour
 
     public void ResetCountdown()
     {
+        ActivateTimerCanvas();
         finishedCounting = false;
         isCounting = false;
         tickSeconds = (int) countdownTime;
         timeLeft = countdownTime;
         timerText.text = getReadyText;
+    }
+
+    public void ActivateTimerCanvas()
+    {
+        timerText.transform.root.gameObject.SetActive(true);
+    }
+    public void DeactivateTimerCanvas()
+    {
+        timerText.transform.root.gameObject.gameObject.SetActive(false);
     }
 
     private IEnumerator CountdownCorroutine()

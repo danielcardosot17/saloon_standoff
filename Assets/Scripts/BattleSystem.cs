@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public enum BattleState { START, COUNTDOWN, PLAYERACTION, RESULT, END}
+public enum BattleState { START, COUNTDOWN, PLAYERACTION, RESULT, IDLE, END}
 public enum BattleMode { DEFAULT }
 public enum CageState { NORMAL, BROKEN }
 public class BattleSystem : MonoBehaviour
@@ -16,11 +17,17 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private int maxMoveFoward;
     [SerializeField] private GameObject endgameCanvas;
     [SerializeField] private TMP_Text endgameText;
-    [SerializeField] private string everybodyIsDeadText;
+    [SerializeField] private string soloVictoryText;
+    [SerializeField] private string[] everybodyIsDeadText;
+    [SerializeField] private string sharedDrinkText;
+    [SerializeField] private string gotTheDrinkText;
+    [SerializeField] private AchievementManager achievementManager;
+    [SerializeField] private TMP_Text achievementsText;
+    [SerializeField] private float idleTime;
     public int MaxBulletCount { get => maxBulletCount; private set => maxBulletCount = value; }
     public int MaxMoveFoward { get => maxMoveFoward; private set => maxMoveFoward = value; }
 
-    private PlayerController winner;
+    private PlayerController soloWinner;
     private List<PlayerController> players;
     public List<PlayerController> Players { get => players; private set => players = value; }
     private BattleState battleState;
@@ -37,6 +44,7 @@ public class BattleSystem : MonoBehaviour
     public CageState CageState { get => cageState; private set => cageState = value; }
 
     public static BattleSystem Instance;
+    private bool isEnd = false;
 
     void Awake()
     {
@@ -52,6 +60,7 @@ public class BattleSystem : MonoBehaviour
 
     void Start()
     {
+        isEnd = false;
         cageState = CageState.NORMAL;
         players = new List<PlayerController>();
         idlePlayers = new List<PlayerController>();
@@ -63,6 +72,8 @@ public class BattleSystem : MonoBehaviour
         {
             MaxBulletCount = 1;
         }
+        
+        endgameCanvas.SetActive(false);
         ResetTurn();
     }
 
@@ -79,50 +90,69 @@ public class BattleSystem : MonoBehaviour
 
     void Update()
     {
-        switch(battleState)
+        if(!isEnd)
         {
-            case BattleState.START:
+            switch(battleState)
             {
-                print("START");
-                ResetPlayersActions();
-                ClearAllActionLists();
-                ChangeStateTo(BattleState.COUNTDOWN);
-                break;
-            }
-            case BattleState.COUNTDOWN:
-            {
-                StartCountdown();
-                break;
-            }
-            case BattleState.PLAYERACTION:
-            {
-                print("PLAYERACTION");
-                // populate all those action lists
-                GetPlayersActions();
-                ChangeStateTo(BattleState.RESULT);
-                break;
-            }
-            case BattleState.RESULT:
-            {
-                print("RESULT");
-                // compare all the action lists
-                // DoActions();
-                CalculateResults();
-                if(EndgameCondition())
+                case BattleState.START:
                 {
-                    ChangeStateTo(BattleState.END);
+                    print("START");
+                    ResetPlayersActions();
+                    ClearAllActionLists();
+                    ChangeStateTo(BattleState.COUNTDOWN);
+                    break;
                 }
-                else{
-                    ChangeStateTo(BattleState.START); // GAME LOOOOP!
+                case BattleState.COUNTDOWN:
+                {
+                    StartCountdown();
+                    break;
                 }
-                break;
+                case BattleState.PLAYERACTION:
+                {
+                    print("PLAYERACTION");
+                    // populate all those action lists
+                    GetPlayersActions();
+                    ChangeStateTo(BattleState.RESULT);
+                    break;
+                }
+                case BattleState.RESULT:
+                {
+                    print("RESULT");
+                    // compare all the action lists
+                    // DoActions();
+
+                    // need to give time between Results and next phase.
+                    CalculateResults();
+                    ChangeStateTo(BattleState.IDLE);
+                    StartCoroutine(EnterIdleStateForThisTimeThenCheckEndgame(idleTime));
+                    break;
+                }
+                case BattleState.END:
+                {
+                    print("END");
+                    EndGame();
+                    break;
+                }
+                case BattleState.IDLE:
+                {
+                    print("IDLE");
+                    break;
+                }
+                default: break;
             }
-            case BattleState.END:
-            {
-                EndGame();
-                break;
-            }
-            default: break;
+        }
+    }
+
+    IEnumerator EnterIdleStateForThisTimeThenCheckEndgame(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+
+        if(EndgameCondition())
+        {
+            ChangeStateTo(BattleState.END);
+        }
+        else{
+            ChangeStateTo(BattleState.START); // GAME LOOOOP!
         }
     }
 
@@ -207,9 +237,39 @@ public class BattleSystem : MonoBehaviour
 
     private void EndGame()
     {
+        isEnd = true;
+        countdownTimer.DeactivateTimerCanvas();
+        DisableAllPlayers();
+        ShowEndgameText();
+        ShowAchievements();
+        endgameCanvas.SetActive(true);
+    }
+
+    private void DisableAllPlayers()
+    {
+        foreach(PlayerController player in players)
+        {
+            player.DisableForEndgame();
+        }
+    }
+
+    private void ShowAchievements()
+    {
+        var text = "";
+        foreach(Achievement achievement in achievementManager.Achievements)
+        {
+            if(achievement.Condition()){
+                text += achievement.achievementName + "\n";
+            }
+        }
+        achievementsText.text = text;
+    }
+
+    private void ShowEndgameText()
+    {
         if(IsEverybodyDead())
         {
-            endgameText.text = everybodyIsDeadText;
+            endgameText.text = everybodyIsDeadText[Random.Range(0,everybodyIsDeadText.Length)];
         }
         else if(OnlyOneAlive())
         {
@@ -217,10 +277,10 @@ public class BattleSystem : MonoBehaviour
             {
                 if(!player.IsDead)
                 {
-                    winner = player;
+                    soloWinner = player;
                 }
             }
-            endgameText.text = winner.NickName + " Victory!";
+            endgameText.text = soloWinner.NickName + "\n" + soloVictoryText;
         }
         else if(SomeoneGotCocktail())
         {
@@ -229,7 +289,7 @@ public class BattleSystem : MonoBehaviour
             WhoGotTheCocktail(whoGotTheCocktail);
             if(whoGotTheCocktail.Count == 1)
             {
-                endgameString += whoGotTheCocktail.First() + " Got the Drink!";
+                endgameString += whoGotTheCocktail.First() + "\n" + gotTheDrinkText;
             }
             else
             {
@@ -237,11 +297,10 @@ public class BattleSystem : MonoBehaviour
                 {
                     endgameString += name + " ";
                 }
-                endgameString += "Shared the Drink!";
+                endgameString += "\n" + sharedDrinkText;
             }
             endgameText.text = endgameString;
         }
-        endgameCanvas.SetActive(true);
     }
 
     private void WhoGotTheCocktail(List<string> whoGotTheCocktail)
@@ -287,16 +346,14 @@ public class BattleSystem : MonoBehaviour
 
     private bool IsEverybodyDead()
     {
-        var isEverybodyDead = true;
         foreach(PlayerController player in players)
         {
             if(!player.IsDead)
             {
-                isEverybodyDead = false;
-                return isEverybodyDead;
+                return false;
             }
         }
-        return isEverybodyDead;
+        return true;
     }
 
     private void GetPlayersActions()
@@ -341,6 +398,7 @@ public class BattleSystem : MonoBehaviour
             }
             else
             {
+                print("COUNTDOWN");
                 ChangeStateTo(BattleState.PLAYERACTION);
                 countdownTimer.ResetCountdown();
             }

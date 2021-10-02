@@ -28,6 +28,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
     
     private int playerId;
     private int playerNumber;
+    private int killCount = 0;
+    public int KillCount { get => killCount; private set => killCount = value; }
+    private int bulletsUsed = 0;
+    public int BulletsUsed { get => bulletsUsed; set => bulletsUsed = value; }
     private PlayerActions action;
     public PlayerActions Action { get => action; private set => action = value; }
     private int bulletCount = 0;
@@ -42,6 +46,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private Vector3 moveStep; // not include spawns
     private int nextPosition = 0;
     private bool gotTheCocktail = false;
+    private bool isDisabled = false;
+
     public bool GotTheCocktail { get => gotTheCocktail; private set => gotTheCocktail = value; }
 
     public PlayerSprite[] PlayerSprites { get => playerSprites; private set => playerSprites = value; }
@@ -77,6 +83,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         ResetAction();
         isDead = false;
+        isDisabled = false;
         gotTheCocktail = false;
         bulletCount = 0;
         nextPosition = 0;
@@ -85,7 +92,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if(!isDead && photonView.IsMine)
+        if(!isDead && photonView.IsMine && !isDisabled)
         {
             //only accepts input while countdown
             if(BattleSystem.Instance.BattleState == BattleState.COUNTDOWN)
@@ -246,6 +253,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
         this.target = target;
         PutCrosshairOnTarget();
         action = PlayerActions.SHOOT;
+    }
+
+    public void DisableForEndgame()
+    {
+        playerName.gameObject.SetActive(false);
+        isDisabled = true;
     }
 
     public void Shoot()
