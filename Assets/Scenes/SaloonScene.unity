@@ -455,9 +455,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   countdownTimer: {fileID: 762302109}
-  resultsTime: 3
   maxBulletCount: 1
-  maxMoveFoward: 2
   endgameCanvas: {fileID: 2140558602}
   endgameText: {fileID: 1635309920}
   soloVictoryText: Victory!
@@ -473,7 +471,7 @@ MonoBehaviour:
   gotTheDrinkText: Got the Drink!
   achievementManager: {fileID: 1799242796}
   achievementsText: {fileID: 24019853}
-  idleTime: 3
+  idleTime: 5
   cage: {fileID: 1280718070}
   cageBreakAudio: CageBreak
 --- !u!114 &762302109

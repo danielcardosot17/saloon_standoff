@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Linq;
+using Random = UnityEngine.Random;
 
 public class AudioManager : MonoBehaviour
 {
@@ -69,7 +70,7 @@ public class AudioManager : MonoBehaviour
 
     public void IncreaseVolume(string name, float endVolume, float duration){
         Sound s = Array.Find(sounds, sound => sound.name == name);
-            StartCoroutine(LerpVolume(s.source,endVolume,duration));
+        StartCoroutine(LerpVolume(s.source,endVolume,duration));
     }
     
     IEnumerator LerpFunction(AudioSource source,float endValue, float duration)
@@ -86,6 +87,22 @@ public class AudioManager : MonoBehaviour
         source.volume = endValue;
         source.Stop();
     }
+
+    public float PlayRandomFromGroupDelayedReturnLength(string group, float delay = 0)
+    {
+        Sound[] soundGroup = Array.FindAll(sounds, sound => sound.groupName == group);
+        if(soundGroup == null){
+            Debug.LogWarning("Group: " + name + " not found!");
+            return -1;
+        }
+        Sound randomSound = soundGroup[Random.Range(0,soundGroup.Length)];
+        randomSound.source.volume = randomSound.volume;
+        randomSound.source.PlayDelayed(delay);
+        print("RANDOM_AUDIO");
+        print(randomSound.name);
+        return randomSound.source.clip.length;
+    }
+
     IEnumerator LerpVolume(AudioSource source, float endValue, float duration)
     {
         float time = 0;

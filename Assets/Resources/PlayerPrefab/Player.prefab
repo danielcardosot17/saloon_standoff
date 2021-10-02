@@ -431,6 +431,7 @@ MonoBehaviour:
   - {x: 1.625, y: -2.125, z: 0}
   - {x: 1.625, y: -1.375, z: 0}
   - {x: -0.875, y: -2.125, z: 0}
+  audioMaxDelay: 1
 --- !u!1001 &7204751857203920251
 PrefabInstance:
   m_ObjectHideFlags: 0

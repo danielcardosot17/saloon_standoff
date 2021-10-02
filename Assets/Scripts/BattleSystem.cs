@@ -12,7 +12,6 @@ public enum CageState { NORMAL, BROKEN }
 public class BattleSystem : MonoBehaviour
 {
     [SerializeField] private CountdownTimer countdownTimer;
-    [SerializeField] private float resultsTime;
     [SerializeField] private int maxBulletCount;
     [SerializeField] private GameObject endgameCanvas;
     [SerializeField] private TMP_Text endgameText;
@@ -202,7 +201,8 @@ public class BattleSystem : MonoBehaviour
             player.Dodge();
             if(targetObjects.Contains(player.gameObject))
             {
-                player.PlayRandomDodgeAudio();
+                var randomDelay = Random.Range(player.AudioMaxDelay/2, player.AudioMaxDelay);
+                player.PlayRandomDodgeAudio(randomDelay);
             }
         }
     }
@@ -240,7 +240,7 @@ public class BattleSystem : MonoBehaviour
 
     private void PlayCageBreakAudio()
     {
-        AudioManager.Instance.PlayDelayed(cageBreakAudio);
+        AudioManager.Instance.PlayDelayed(cageBreakAudio, localPlayer.AudioMaxDelay);
     }
 
     private void EndGame()
