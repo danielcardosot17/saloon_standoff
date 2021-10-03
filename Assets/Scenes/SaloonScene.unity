@@ -371,7 +371,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25.2
+  m_fontSize: 37.6
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -655,7 +655,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.4, y: 0.1}
-  m_AnchoredPosition: {x: 5.0000153, y: 0}
+  m_AnchoredPosition: {x: 5.000061, y: 0}
   m_SizeDelta: {x: -9.999985, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &686772136
@@ -705,7 +705,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28.75
+  m_fontSize: 42.45
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -873,7 +873,7 @@ MonoBehaviour:
   gotTheDrinkText: Got the Drink!
   achievementManager: {fileID: 1799242796}
   achievementsText: {fileID: 24019853}
-  idleTime: 5
+  idleTime: 6
   cage: {fileID: 1280718070}
   cageBreakAudio: CageBreak
   artistText: {fileID: 686772136}
@@ -892,7 +892,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerText: {fileID: 1926248946}
   countdownTime: 5
-  preTime: 3
+  preTime: 4
   getReadyText: Get Ready...
   goActionText: Action!
   readySound: CountdownReady

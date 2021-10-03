@@ -25,6 +25,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     [Range(0,3)]
     [SerializeField] private float audioMaxDelay = 1;
+    [SerializeField] private Transform bulletOrigin;
+    [SerializeField] private LineRenderer bulletLine;
+    [SerializeField] private float bulletLineTime;
     private Player photonPlayer;
     private string nickName;
     public string NickName { get => nickName; private set => nickName = value; }
@@ -323,6 +326,27 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         var randomDelay = Random.Range(0.0f,audioMaxDelay/2);
         PlayRandomShotAudio(randomDelay);
+        StartCoroutine(TurnOnBulletLine(randomDelay));
+        StartCoroutine(TurnOffBulletLine(randomDelay + bulletLineTime));
+    }
+
+    IEnumerator TurnOnBulletLine(float afterTime)
+    {
+        yield return new WaitForSeconds(afterTime);
+        SetBulletLine();
+        bulletLine.enabled = true;
+    }
+
+    private void SetBulletLine()
+    {
+        bulletLine.SetPosition(0,bulletOrigin.position);
+        bulletLine.SetPosition(1,Target.transform.position);
+    }
+
+    IEnumerator TurnOffBulletLine(float afterTime)
+    {
+        yield return new WaitForSeconds(afterTime);
+        bulletLine.enabled = false;
     }
 
     private void LoadAnimation()
