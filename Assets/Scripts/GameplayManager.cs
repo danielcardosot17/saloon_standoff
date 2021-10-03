@@ -29,8 +29,9 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     }
 
     private void Start() {
+        players = new List<PlayerController>();
+        playersInGame = 0;
         photonView.RPC("AddPlayer", RpcTarget.AllBuffered);
-        players = new List<PlayerController>(); 
     }
 
     [PunRPC]

@@ -24,6 +24,8 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private float idleTime;
     [SerializeField] private GameObject cage;
     [SerializeField] private string cageBreakAudio;
+    [SerializeField] private TMP_Text artistText;
+    [SerializeField] private TMP_Text musicText;
     public int MaxBulletCount { get => maxBulletCount; private set => maxBulletCount = value; }
     private PlayerController soloWinner;
     private PlayerController localPlayer;
@@ -77,6 +79,8 @@ public class BattleSystem : MonoBehaviour
         
         endgameCanvas.SetActive(false);
         countdownTimer.ResetCountdown();
+        AudioManager.Instance.StopAllExcept();
+        PlayRandomBackgroundMusic();
     }
 
     private void ChangeStateTo(BattleState newState)
@@ -224,8 +228,7 @@ public class BattleSystem : MonoBehaviour
             if(target.name.Equals("Cage")) // Someone shot the cage!!
             {
                 cageState = CageState.BROKEN;
-                cage.SetActive(false);
-                PlayCageBreakAudio();
+                StartCoroutine(PlayCageBreakAudio());
             }
             else
             {
@@ -238,9 +241,12 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    private void PlayCageBreakAudio()
+    IEnumerator  PlayCageBreakAudio()
     {
+        // just to make cage disappear at the same time of the sound
         AudioManager.Instance.PlayDelayed(cageBreakAudio, localPlayer.AudioMaxDelay);
+        yield return new WaitForSeconds(localPlayer.AudioMaxDelay);
+        cage.SetActive(false);
     }
 
     private void EndGame()
@@ -434,4 +440,71 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    public void PlayAgain()
+    {
+        ResetEverything();
+        AudioManager.Instance.StopAllExcept();
+        PlayRandomBackgroundMusic();
+    }
+
+    private void PlayRandomBackgroundMusic()
+    {
+        var music = AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Music");
+        artistText.text = music.artistName;
+        musicText.text = music.name;
+
+    }
+
+    private void ResetEverything()
+    {
+        ResetPlayersActions();
+        ClearAllActionLists();
+        ResetPlayersVariables();
+        ResetEndgameCanvas();
+        ResetWhoGotCocktailAndWinners();
+        ResetCage();
+        countdownTimer.ResetCountdown();
+        countdownTimer.ActivateTimerCanvas();
+        ChangeStateTo(BattleState.START);
+        isEnd = false;
+    }
+
+    private void ResetWhoGotCocktailAndWinners()
+    {
+        soloWinner = null;
+        playersWhoGotTheCocktail.Clear();
+    }
+
+    private void ResetPlayersVariables()
+    {
+        foreach(PlayerController player in players)
+        {
+            player.ResetBullets();
+            player.ResetPositionAndStepCount();
+            player.ResetKillCount();
+            player.ResetName();
+            player.ResetSpriteColor();
+            player.ResetWinner();
+            player.ResetIsDead();
+            player.ResetGotCocktail();
+            player.EnableAgain();
+        }
+    }
+
+    private void ResetCage()
+    {
+        cageState = CageState.NORMAL;
+        cage.SetActive(true);
+    }
+
+    private void ResetEndgameCanvas()
+    {
+        endgameText.text = "";
+        achievementsText.text = "";
+        endgameCanvas.SetActive(false);
+    }
+
+    public void ExitSaloon()
+    {
+    }
 }

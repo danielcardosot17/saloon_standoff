@@ -45,9 +45,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private GameObject target = null; // might be the cage
     public GameObject Target { get => target; private set => target = value; }
-    
+
+    private Vector3 originalPosition;
+    private Color originalColor;
     private Vector3 moveStep; // not include spawns
-    private int nextPosition = 0;
+    private int stepCount = 0;
     private bool gotTheCocktail = false;
     private bool isDisabled = false;
     private bool isWinner = false;
@@ -69,6 +71,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         playerId = player.ActorNumber;
         playerNumber = player.GetPlayerNumber();
         ChangePlayerSprite(spriteNumber);
+        originalPosition = transform.position;
+        originalColor = this.GetComponent<SpriteRenderer>().color;
         moveStep = (finalPositions[playerNumber] - transform.position)/maxMoveFoward;
         GameplayManager.Instance.Players.Add(this);
         BattleSystem.Instance.Players.Add(this);
@@ -102,7 +106,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         isWinner = false;
         gotTheCocktail = false;
         bulletCount = 0;
-        nextPosition = 0;
+        stepCount = 0;
         killCount = 0;
         maxBulletCount = BattleSystem.Instance.MaxBulletCount;
     }
@@ -198,7 +202,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     // more than one player may get share the cocktail!!
     public void Load()
     {
-        if(nextPosition < maxMoveFoward)
+        if(stepCount < maxMoveFoward)
         {
             print("Load");
             LoadAnimation();
@@ -227,10 +231,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void Dodge()
     {
         print("Dodge");
-        if(nextPosition < maxMoveFoward)
+        if(stepCount < maxMoveFoward)
         {
             MoveFoward();
-            nextPosition++;
+            stepCount++;
         }
     }
 
@@ -341,17 +345,17 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private float PlayRandomShellAudio(float delay = 0)
     {
-        return AudioManager.Instance.PlayRandomFromGroupDelayedReturnLength("Shell", delay);
+        return AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Shell", delay).source.clip.length;
     }
 
     private float PlayRandomLoadAudio(float delay = 0)
     {
-        return AudioManager.Instance.PlayRandomFromGroupDelayedReturnLength("Load", delay);
+        return AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Load", delay).source.clip.length;
     }
 
     private float PlayRandomCockAudio(float delay = 0)
     {
-        return AudioManager.Instance.PlayRandomFromGroupDelayedReturnLength("Cock", delay);
+        return AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Cock", delay).source.clip.length;
     }
 
     private void DodgeAnimation()
@@ -366,26 +370,26 @@ public class PlayerController : MonoBehaviourPunCallbacks
     
     private void PlayRandomCocktailAudio()
     {
-        AudioManager.Instance.PlayRandomFromGroupDelayedReturnLength("Cocktail");
+        AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Cocktail");
     }
     private void PlayRadomDeathAudio(float delay = 0)
     {
-        AudioManager.Instance.PlayRandomFromGroupDelayedReturnLength("Death", delay);
+        AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Death", delay);
     }
     
     private void PlayRandomShotAudio(float delay = 0)
     {
-        AudioManager.Instance.PlayRandomFromGroupDelayedReturnLength("Shot", delay);
+        AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Shot", delay);
     }
 
     private void PlayRadomDryShotAudio(float delay = 0)
     {
-        AudioManager.Instance.PlayRandomFromGroupDelayedReturnLength("Dryshot", delay);
+        AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Dryshot", delay);
     }
 
     public void PlayRandomDodgeAudio(float delay = 0)
     {
-        AudioManager.Instance.PlayRandomFromGroupDelayedReturnLength("Dodge", delay);
+        AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Dodge", delay);
     }
 
     IEnumerator LerpPosition(Vector3 targetPosition, float duration)
@@ -400,5 +404,58 @@ public class PlayerController : MonoBehaviourPunCallbacks
             yield return null;
         }
         transform.position = targetPosition;
+    }
+
+    public void ResetPositionAndStepCount()
+    {
+        transform.position = originalPosition;
+        stepCount = 0;
+    }
+
+    public void ResetBullets()
+    {
+        bulletCount = 0;
+        bulletsUsed = 0;
+        UpdateBulletCanvas();
+    }
+
+    public void ResetKillCount()
+    {
+        killCount = 0;
+    }
+
+    public void ResetName()
+    {
+        playerName.text = nickName;
+    }
+
+    public void ResetSpriteColor()
+    {
+        this.GetComponent<SpriteRenderer>().color = originalColor;
+    }
+
+    public void ResetWinner()
+    {
+        isWinner = false;
+    }
+
+    public void ResetIsDead()
+    {
+        isDead = false;
+    }
+
+    public void EnableAgain()
+    {
+        
+        playerName.gameObject.SetActive(true);
+        isDisabled = false;
+        
+        GetComponent<Collider2D>().enabled = true;
+        this.enabled = true;
+    }
+
+    public void ResetGotCocktail()
+    {
+        gotTheCocktail = false;
     }
 }

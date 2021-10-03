@@ -88,19 +88,19 @@ public class AudioManager : MonoBehaviour
         source.Stop();
     }
 
-    public float PlayRandomFromGroupDelayedReturnLength(string group, float delay = 0)
+    public Sound PlayRandomFromGroupDelayedReturnSound(string group, float delay = 0)
     {
         Sound[] soundGroup = Array.FindAll(sounds, sound => sound.groupName == group);
         if(soundGroup == null){
             Debug.LogWarning("Group: " + name + " not found!");
-            return -1;
+            return null;
         }
         Sound randomSound = soundGroup[Random.Range(0,soundGroup.Length)];
         randomSound.source.volume = randomSound.volume;
         randomSound.source.PlayDelayed(delay);
         print("RANDOM_AUDIO");
         print(randomSound.name);
-        return randomSound.source.clip.length;
+        return randomSound;
     }
 
     IEnumerator LerpVolume(AudioSource source, float endValue, float duration)

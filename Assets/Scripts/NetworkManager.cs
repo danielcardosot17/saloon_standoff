@@ -71,10 +71,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     
     [PunRPC]
-    public void StartGame(string gameSceneName)
+    public void StartGame(string sceneName)
     {
         AudioManager.Instance.StopAllExcept();
-        PhotonNetwork.LoadLevel(gameSceneName);
+        PhotonNetwork.LoadLevel(sceneName);
     }
 
     public bool IsMasterClient()

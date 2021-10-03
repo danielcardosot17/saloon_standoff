@@ -6,6 +6,7 @@ public class Sound
 {
     public string name;
     public string groupName;
+    public string artistName;
     public AudioClip clip;
     
     [Range(0,256)]
