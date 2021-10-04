@@ -5,6 +5,7 @@ using System.Linq;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public enum BattleState { START, COUNTDOWN, PLAYERACTION, RESULT, IDLE, END}
@@ -25,9 +26,9 @@ public class BattleSystem : MonoBehaviourPunCallbacks
     [SerializeField] private float idleTime;
     [SerializeField] private GameObject cage;
     [SerializeField] private string cageBreakAudio;
-    [SerializeField] private TMP_Text artistText;
-    [SerializeField] private TMP_Text musicText;
     [SerializeField] private float getActionsDelay;
+    [SerializeField] private Button playAgainBtn;
+    [SerializeField] private float firstStartWaitTime;
     public int MaxBulletCount { get => maxBulletCount; private set => maxBulletCount = value; }
     private PlayerController soloWinner;
     private PlayerController localPlayer;
@@ -48,6 +49,10 @@ public class BattleSystem : MonoBehaviourPunCallbacks
     public static BattleSystem Instance;
     private bool isEnd = false;
     private List<string> playersWhoGotTheCocktail;
+    private bool isEverybodyReady = false;
+
+    // this bool tries to minimaze the delay difference for players of the first start
+    private bool readyToFirstStart = false;
 
     public List<string> PlayersWhoGotTheCocktail { get => playersWhoGotTheCocktail; set => playersWhoGotTheCocktail = value; }
     public GameObject Cage { get => cage; private set => cage = value; }
@@ -83,8 +88,36 @@ public class BattleSystem : MonoBehaviourPunCallbacks
         
         endgameCanvas.SetActive(false);
         countdownTimer.ResetCountdown();
-        AudioManager.Instance.StopAllExcept();
-        PlayRandomBackgroundMusic();
+        readyToFirstStart = false;
+        // only master client gives PlayAgain
+        if(NetworkManager.Instance.IsMasterClient())
+        {
+            StartCoroutine(WaitForStartThenPlayAgain());
+        }
+        // AudioManager.Instance.StopAllExcept();
+        // SyncBackgroundMusic();
+    }
+
+    IEnumerator WaitForStartThenPlayAgain()
+    {
+        yield return new WaitForSeconds(firstStartWaitTime);
+        PlayAgain();
+    }
+
+    private void SyncBackgroundMusic()
+    {
+        if(NetworkManager.Instance.IsMasterClient())
+        {
+            // RPC
+            PlayRandomBackgroundMusicRPC();
+        }
+    }
+
+    private void PlayRandomBackgroundMusicRPC()
+    {
+        // Didnt want to put photon view on BattleSystem too
+        var randomNumber = Random.Range(0,AudioManager.Instance.SoundGroupLength("Music"));
+        GameplayManager.Instance.photonView.RPC("PlayBackgroundMusicRPC",RpcTarget.AllViaServer,randomNumber);
     }
 
     private void ChangeStateTo(BattleState newState)
@@ -94,7 +127,7 @@ public class BattleSystem : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if(!isEnd)
+        if(!isEnd && IsEverybodyReady() && readyToFirstStart)
         {
             switch(battleState)
             {
@@ -284,7 +317,10 @@ public class BattleSystem : MonoBehaviourPunCallbacks
                 var targetPlayer = players.Find(player => player.PlayerNumber == targetNumber);
                 if(idlePlayers.Contains(targetPlayer) || loadPlayers.Contains(targetPlayer) || shootPlayers.Contains(targetPlayer))
                 {
-                    targetPlayer.Die();
+                    // must give time to bulletLine
+                    StartCoroutine(DoAfterTimeCoroutine(localPlayer.AudioMaxDelay,() => {
+                        targetPlayer.Die();
+                    }));
                 }
             }
         }
@@ -306,6 +342,7 @@ public class BattleSystem : MonoBehaviourPunCallbacks
         ShowEndgameText();
         ShowAchievements();
         endgameCanvas.SetActive(true);
+        playAgainBtn.interactable = NetworkManager.Instance.IsMasterClient() && PhotonNetwork.PlayerList.Length >= 2;
     }
 
     private void DisableAllPlayers()
@@ -457,22 +494,17 @@ public class BattleSystem : MonoBehaviourPunCallbacks
         }
     }
 
+    // only masterclient can PlayAgain
     public void PlayAgain()
     {
-        ResetEverything();
-        AudioManager.Instance.StopAllExcept();
-        PlayRandomBackgroundMusic();
+        // RPC needed here
+        // ResetEverything();
+        photonView.RPC("ResetEverything",RpcTarget.All);
+        SyncBackgroundMusic();
     }
 
-    private void PlayRandomBackgroundMusic()
-    {
-        var music = AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Music");
-        artistText.text = music.artistName;
-        musicText.text = music.name;
-
-    }
-
-    private void ResetEverything()
+    [PunRPC]
+    public void ResetEverything()
     {
         ResetPlayersActions();
         ClearAllActionLists();
@@ -483,7 +515,9 @@ public class BattleSystem : MonoBehaviourPunCallbacks
         countdownTimer.ResetCountdown();
         countdownTimer.ActivateTimerCanvas();
         ChangeStateTo(BattleState.START);
+        AudioManager.Instance.StopAllExcept();
         isEnd = false;
+        readyToFirstStart = true;
     }
 
     private void ResetWhoGotCocktailAndWinners()
@@ -524,4 +558,33 @@ public class BattleSystem : MonoBehaviourPunCallbacks
     public void ExitSaloon()
     {
     }
+
+    private bool IsEverybodyReady()
+    {
+        // want to check only in the beginning
+        if(isEverybodyReady)
+        {
+            return true;
+        }
+        else
+        {
+            foreach(PlayerController player in players)
+            {
+                if(!player.IsReady)
+                {
+                    isEverybodyReady = false;
+                    return false;
+                }
+            }
+            isEverybodyReady = true;
+            return true; 
+        }
+    }
+
+    public static IEnumerator DoAfterTimeCoroutine(float time, Action action)
+    {
+        yield return new WaitForSeconds(time);
+        action();
+    }
+
 }

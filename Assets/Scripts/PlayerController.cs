@@ -74,6 +74,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public PlayerSprite[] PlayerSprites { get => playerSprites; private set => playerSprites = value; }
     public float AudioMaxDelay { get => audioMaxDelay; set => audioMaxDelay = value; }
 
+    private bool isReady = false;
+    public bool IsReady { get => isReady; private set => isReady = value; }
+
     [PunRPC]
     private void InitializePlayer(Player player, int spriteNumber)
     {
@@ -93,6 +96,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             isLocalPlayer = true;
             BattleSystem.Instance.LocalPlayer = this;
         }
+        isReady = true;
     }
 
     private void ChangePlayerSprite(int spriteNumber)
@@ -210,6 +214,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void ResetAction()
     {
         print("ResetAction");
+        print(nickName);
         action = PlayerActions.IDLE;
         chosenAction = PlayerActions.IDLE;
         DisableCrosshair();
@@ -218,6 +223,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void LoadAction()
     {
         print("LoadAction");
+        print(nickName);
         chosenAction = PlayerActions.LOAD;
         DisableCrosshair();
     }
@@ -225,6 +231,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void DodgeAction()
     {
         print("DodgeAction");
+        print(nickName);
         chosenAction = PlayerActions.DODGE;
         DisableCrosshair();
     }
@@ -232,6 +239,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void ShootAction()
     {
         print("ShootAction");
+        print(nickName);
         chosenAction = PlayerActions.SHOOT;
     }
 
@@ -239,7 +247,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void UpdateActionAndTargetRPC(byte chosenAction, int chosenTarget)
     {
         print("UpdateActionAndTargetRPC");
+        print(nickName);
+        print(chosenTarget);
         action = (PlayerActions)chosenAction;
+        print(action.ToString());
         if(action == PlayerActions.SHOOT)
         {
             targetNumber = chosenTarget;
@@ -273,6 +284,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if(stepCount < maxMoveFoward)
         {
             print("Load");
+            print(nickName);
             LoadAnimation();
             print(bulletCount);
             if(bulletCount < maxBulletCount)
@@ -285,6 +297,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         else
         {
             print("GetCocktail");
+            print(nickName);
             GetCocktail();
         }
     }
@@ -292,6 +305,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void Dodge()
     {
         print("Dodge");
+        print(nickName);
         if(stepCount < maxMoveFoward)
         {
             MoveFoward();
@@ -319,11 +333,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
         DisableCrosshair();
         playerName.gameObject.SetActive(false);
         isDisabled = true;
+        isReady = false;
     }
 
     public void Shoot()
     {
         print("Shoot");
+        print(nickName);
         bulletCount--;
         bulletsUsed++;
         UpdateBulletCanvas();
@@ -333,6 +349,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void DryShoot()
     {
         print("DryShoot");
+        print(nickName);
         DryShootAnimation();
     }
 
@@ -357,7 +374,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     
     public void Die()
     {
-        PlayRadomDeathAudio(audioMaxDelay);
+        print("Die");
+        print(nickName);
+        PlayRadomDeathAudio();
         isDead = true;
         playerName.text += "\n" + "DEAD";
         this.GetComponent<SpriteRenderer>().color = Color.red;
@@ -421,17 +440,20 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private float PlayRandomShellAudio(float delay = 0)
     {
-        return AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Shell", delay).source.clip.length;
+        var randomNumber = Random.Range(0,AudioManager.Instance.SoundGroupLength("Shell"));
+        return AudioManager.Instance.PlayFromGroupDelayedReturnSound("Shell", randomNumber, delay).source.clip.length;
     }
 
     private float PlayRandomLoadAudio(float delay = 0)
     {
-        return AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Load", delay).source.clip.length;
+        var randomNumber = Random.Range(0,AudioManager.Instance.SoundGroupLength("Load"));
+        return AudioManager.Instance.PlayFromGroupDelayedReturnSound("Load", randomNumber, delay).source.clip.length;
     }
 
     private float PlayRandomCockAudio(float delay = 0)
     {
-        return AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Cock", delay).source.clip.length;
+        var randomNumber = Random.Range(0,AudioManager.Instance.SoundGroupLength("Cock"));
+        return AudioManager.Instance.PlayFromGroupDelayedReturnSound("Cock", randomNumber, delay).source.clip.length;
     }
 
     private void DodgeAnimation()
@@ -446,26 +468,31 @@ public class PlayerController : MonoBehaviourPunCallbacks
     
     private void PlayRandomCocktailAudio()
     {
-        AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Cocktail");
+        var randomNumber = Random.Range(0,AudioManager.Instance.SoundGroupLength("Cocktail"));
+        AudioManager.Instance.PlayFromGroupDelayedReturnSound("Cocktail", randomNumber);
     }
     private void PlayRadomDeathAudio(float delay = 0)
     {
-        AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Death", delay);
+        var randomNumber = Random.Range(0,AudioManager.Instance.SoundGroupLength("Death"));
+        AudioManager.Instance.PlayFromGroupDelayedReturnSound("Death", randomNumber, delay);
     }
     
     private void PlayRandomShotAudio(float delay = 0)
     {
-        AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Shot", delay);
+        var randomNumber = Random.Range(0,AudioManager.Instance.SoundGroupLength("Shot"));
+        AudioManager.Instance.PlayFromGroupDelayedReturnSound("Shot", randomNumber, delay);
     }
 
     private void PlayRadomDryShotAudio(float delay = 0)
     {
-        AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Dryshot", delay);
+        var randomNumber = Random.Range(0,AudioManager.Instance.SoundGroupLength("Dryshot"));
+        AudioManager.Instance.PlayFromGroupDelayedReturnSound("Dryshot", randomNumber, delay);
     }
 
     public void PlayRandomDodgeAudio(float delay = 0)
     {
-        AudioManager.Instance.PlayRandomFromGroupDelayedReturnSound("Dodge", delay);
+        var randomNumber = Random.Range(0,AudioManager.Instance.SoundGroupLength("Dodge"));
+        AudioManager.Instance.PlayFromGroupDelayedReturnSound("Dodge", randomNumber, delay);
     }
 
     IEnumerator LerpPosition(Vector3 targetPosition, float duration)
@@ -528,10 +555,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
         
         GetComponent<Collider2D>().enabled = true;
         this.enabled = true;
+        isReady = true;
     }
 
     public void ResetGotCocktail()
     {
         gotTheCocktail = false;
     }
+
 }

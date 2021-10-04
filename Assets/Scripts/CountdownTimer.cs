@@ -32,6 +32,7 @@ public class CountdownTimer : MonoBehaviour
 
     public void StartCountdown()
     {
+        PlayReadySound();
         isCounting = true;
         StartCoroutine(DoAfterTimeCoroutine(preTime,() => {
             StartCoroutine(CountdownCorroutine());
@@ -40,7 +41,6 @@ public class CountdownTimer : MonoBehaviour
 
     public void ResetCountdown()
     {
-        PlayReadySound();
         ActivateTimerCanvas();
         finishedCounting = false;
         isCounting = false;
@@ -92,6 +92,7 @@ public class CountdownTimer : MonoBehaviour
     {
         AudioManager.Instance.PlayDelayed(goSound);
     }
+    
     public static IEnumerator DoAfterTimeCoroutine(float time, Action action)
     {
         yield return new WaitForSeconds(time);

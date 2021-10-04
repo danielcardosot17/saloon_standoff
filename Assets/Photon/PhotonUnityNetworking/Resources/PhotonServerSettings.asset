@@ -52,6 +52,8 @@ MonoBehaviour:
   - ShootAction
   - SetTarget
   - UpdateActionAndTargetRPC
+  - PlayBackgroundMusicRPC
+  - ResetEverything
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

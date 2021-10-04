@@ -88,19 +88,23 @@ public class AudioManager : MonoBehaviour
         source.Stop();
     }
 
-    public Sound PlayRandomFromGroupDelayedReturnSound(string group, float delay = 0)
+    public Sound PlayFromGroupDelayedReturnSound(string group, int index, float delay = 0)
     {
         Sound[] soundGroup = Array.FindAll(sounds, sound => sound.groupName == group);
         if(soundGroup == null){
             Debug.LogWarning("Group: " + name + " not found!");
             return null;
         }
-        Sound randomSound = soundGroup[Random.Range(0,soundGroup.Length)];
-        randomSound.source.volume = randomSound.volume;
-        randomSound.source.PlayDelayed(delay);
-        print("RANDOM_AUDIO");
-        print(randomSound.name);
-        return randomSound;
+        Sound sound = soundGroup[index];
+        sound.source.volume = sound.volume;
+        sound.source.PlayDelayed(delay);
+        return sound;
+    }
+
+    public int SoundGroupLength(string group)
+    {
+        Sound[] soundGroup = Array.FindAll(sounds, sound => sound.groupName == group);
+        return soundGroup.Length;
     }
 
     IEnumerator LerpVolume(AudioSource source, float endValue, float duration)
@@ -115,5 +119,27 @@ public class AudioManager : MonoBehaviour
             yield return null;
         }
         source.volume = endValue;
+    }
+
+    public string GetArtistName(string group, int index)
+    {
+        Sound[] soundGroup = Array.FindAll(sounds, sound => sound.groupName == group);
+        if(soundGroup == null){
+            Debug.LogWarning("Group: " + name + " not found!");
+            return null;
+        }
+        Sound sound = soundGroup[index];
+        return sound.artistName;
+    }
+
+    public string GetSoundName(string group, int index)
+    {
+        Sound[] soundGroup = Array.FindAll(sounds, sound => sound.groupName == group);
+        if(soundGroup == null){
+            Debug.LogWarning("Group: " + name + " not found!");
+            return null;
+        }
+        Sound sound = soundGroup[index];
+        return sound.name;
     }
 }

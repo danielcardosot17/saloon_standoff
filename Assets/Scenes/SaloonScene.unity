@@ -371,7 +371,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36.55
+  m_fontSize: 33.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -705,7 +705,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 41.3
+  m_fontSize: 38.3
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -823,6 +823,7 @@ GameObject:
   - component: {fileID: 762302107}
   - component: {fileID: 762302109}
   - component: {fileID: 762302108}
+  - component: {fileID: 762302110}
   m_Layer: 0
   m_Name: BattleSystem
   m_TagString: Untagged
@@ -876,9 +877,9 @@ MonoBehaviour:
   idleTime: 6
   cage: {fileID: 1280718070}
   cageBreakAudio: CageBreak
-  artistText: {fileID: 686772136}
-  musicText: {fileID: 264382200}
   getActionsDelay: 2
+  playAgainBtn: {fileID: 1461076650}
+  firstStartWaitTime: 2
 --- !u!114 &762302109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -899,6 +900,28 @@ MonoBehaviour:
   readySound: CountdownReady
   tickSound: CountdownTick
   goSound: CountdownGo
+--- !u!114 &762302110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762302106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 3
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &909440093
 GameObject:
   m_ObjectHideFlags: 0
@@ -2317,6 +2340,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1780175428370363319, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
+      propertyPath: musicText
+      value: 
+      objectReference: {fileID: 264382200}
+    - target: {fileID: 1780175428370363319, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
+      propertyPath: artistText
+      value: 
+      objectReference: {fileID: 686772136}
     - target: {fileID: 1780175428370363319, guid: 37cdc0d5af8eb454a99312edd29dc4d1, type: 3}
       propertyPath: prefabLocation
       value: PlayerPrefab/Player
