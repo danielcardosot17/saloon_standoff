@@ -138,27 +138,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
             {
                 if(Input.GetKeyDown(KeyCode.R))
                 {
-                    // RPC
                     LoadAction();
                 }
                 if(Input.GetKeyDown(KeyCode.Space))
                 {
-                    // RPC
                     DodgeAction();
                 }
-                // RPC inside
                 ShootActionCheck();
             }
         }
-        // #if UNITY_EDITOR
-        // else if(!photonView.IsMine)
-        // {
-        //     if(BattleSystem.Instance.BattleState == BattleState.COUNTDOWN)
-        //     {
-        //         DodgeAction();
-        //     }
-        // }
-        // #endif
     }
 
     private void ShootActionCheck()
@@ -182,7 +170,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         hit = Physics2D.Raycast(ray.origin, ray.direction, 20f, playerLayerMask);
         if(hit.collider != null)
         {
-            // RPC
             ShootAction();
             if(hit.collider.gameObject.name.Equals("Cage"))
             {
@@ -281,7 +268,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
     // more than one player may get share the cocktail!!
     public void Load()
     {
-        if(stepCount < maxMoveFoward)
+        if(stepCount >= maxMoveFoward && BattleSystem.Instance.CageState == CageState.BROKEN)
+        {
+            print("GetCocktail");
+            print(nickName);
+            GetCocktail();
+        }
+        else
         {
             print("Load");
             print(nickName);
@@ -294,12 +287,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
             }
             print(bulletCount);
         }
-        else
-        {
-            print("GetCocktail");
-            print(nickName);
-            GetCocktail();
-        }
+    }
+
+    private void GetCocktail()
+    {
+        PlayRandomCocktailAudio();
+        gotTheCocktail = true;
     }
 
     public void Dodge()
@@ -311,14 +304,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
             MoveFoward();
             stepCount++;
         }
-    }
-
-    private void GetCocktail()
-    {
-        if(BattleSystem.Instance.CageState == CageState.BROKEN)
+        if(stepCount == maxMoveFoward)
         {
-            PlayRandomCocktailAudio();
-            gotTheCocktail = true;
+            BattleSystem.Instance.ChangeLoadButtonText();
         }
     }
 
@@ -563,4 +551,27 @@ public class PlayerController : MonoBehaviourPunCallbacks
         gotTheCocktail = false;
     }
 
+    public void LoadButtonPress()
+    {
+        if(!isDead && photonView.IsMine && !isDisabled)
+        {
+            //only accepts input while countdown
+            if(BattleSystem.Instance.BattleState == BattleState.COUNTDOWN)
+            {
+                LoadAction();
+            }
+        }
+    }
+
+    public void DodgeButtonPress()
+    {
+        if(!isDead && photonView.IsMine && !isDisabled)
+        {
+            //only accepts input while countdown
+            if(BattleSystem.Instance.BattleState == BattleState.COUNTDOWN)
+            {
+                DodgeAction();
+            }
+        }
+    }
 }

@@ -29,6 +29,7 @@ public class BattleSystem : MonoBehaviourPunCallbacks
     [SerializeField] private float getActionsDelay;
     [SerializeField] private Button playAgainBtn;
     [SerializeField] private float firstStartWaitTime;
+    [SerializeField] private TMP_Text loadBtnText;
     public int MaxBulletCount { get => maxBulletCount; private set => maxBulletCount = value; }
     private PlayerController soloWinner;
     private PlayerController localPlayer;
@@ -303,6 +304,11 @@ public class BattleSystem : MonoBehaviourPunCallbacks
         }
     }
 
+    public void ChangeLoadButtonText()
+    {
+        loadBtnText.text += "\n" + "Drink"; 
+    }
+
     private void GetShotAndDie()
     {
         foreach(int targetNumber in targetNumbers)
@@ -552,11 +558,13 @@ public class BattleSystem : MonoBehaviourPunCallbacks
     {
         endgameText.text = "";
         achievementsText.text = "";
+        loadBtnText.text = "Load";
         endgameCanvas.SetActive(false);
     }
 
     public void ExitSaloon()
     {
+        Application.Quit();
     }
 
     private bool IsEverybodyReady()
@@ -579,6 +587,17 @@ public class BattleSystem : MonoBehaviourPunCallbacks
             isEverybodyReady = true;
             return true; 
         }
+    }
+
+    // these 2 methods are for player input with the buttons
+    public void LoadButtonPress()
+    {
+        localPlayer.LoadButtonPress();
+    }
+
+    public void DodgeButtonPress()
+    {
+        localPlayer.DodgeButtonPress();
     }
 
     public static IEnumerator DoAfterTimeCoroutine(float time, Action action)

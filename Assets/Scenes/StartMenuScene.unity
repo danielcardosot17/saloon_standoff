@@ -2928,7 +2928,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 339477542, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
       propertyPath: sceneViewId
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1516372154, guid: 3c994d96eb3ed17429167b8079bd5c7a, type: 3}
       propertyPath: m_fontSize
