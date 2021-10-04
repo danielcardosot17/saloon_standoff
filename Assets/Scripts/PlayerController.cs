@@ -115,6 +115,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         stepCount = 0;
         killCount = 0;
         targetNumber = -10;
+        bulletLine.enabled = false;
         maxBulletCount = BattleSystem.Instance.MaxBulletCount;
     }
 

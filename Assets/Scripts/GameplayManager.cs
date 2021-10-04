@@ -49,6 +49,6 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         var playerObj = PhotonNetwork.Instantiate(prefabLocation, spawnLocations[PhotonNetwork.LocalPlayer.GetPlayerNumber()].position, Quaternion.identity);
         var player = playerObj.GetComponent<PlayerController>();
         var spriteNumber = Random.Range(0,player.PlayerSprites[PhotonNetwork.LocalPlayer.GetPlayerNumber()].sprites.Length);
-        player.photonView.RPC("InitializePlayer", RpcTarget.All, PhotonNetwork.LocalPlayer, spriteNumber);
+        player.photonView.RPC("InitializePlayer", RpcTarget.AllViaServer, PhotonNetwork.LocalPlayer, spriteNumber);
     }
 }

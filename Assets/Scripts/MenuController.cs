@@ -54,6 +54,6 @@ public class MenuController : MonoBehaviourPunCallbacks
     public void StartGame(string sceneName)
     {
         AudioManager.Instance.PlayDelayed("Click1");
-        NetworkManager.Instance.photonView.RPC("StartGame",RpcTarget.All, sceneName);
+        NetworkManager.Instance.photonView.RPC("StartGame",RpcTarget.AllViaServer, sceneName);
     }
 }
