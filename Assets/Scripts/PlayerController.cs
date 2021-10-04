@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     
     private int playerId;
     private int playerNumber;
+    public int PlayerNumber { get => playerNumber; private set => playerNumber = value; }
     private int killCount = 0;
     public int KillCount { get => killCount; private set => killCount = value; }
     private int bulletsUsed = 0;
@@ -49,6 +50,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private GameObject target = null; // might be the cage
     public GameObject Target { get => target; private set => target = value; }
 
+    private int targetNumber = -10; // -10 = nothing, -5 = cage
+    public int TargetNumber { get => targetNumber; private set => targetNumber = value; }
     private Vector3 originalPosition;
     private Color originalColor;
     private Vector3 moveStep; // not include spawns
@@ -111,6 +114,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         bulletCount = 0;
         stepCount = 0;
         killCount = 0;
+        targetNumber = -10;
         maxBulletCount = BattleSystem.Instance.MaxBulletCount;
     }
 
@@ -121,14 +125,19 @@ public class PlayerController : MonoBehaviourPunCallbacks
             //only accepts input while countdown
             if(BattleSystem.Instance.BattleState == BattleState.COUNTDOWN)
             {
-                if(Input.GetKey(KeyCode.R))
+                if(Input.GetKeyDown(KeyCode.R))
                 {
-                    LoadAction();
+                    // RPC
+                    // LoadAction();
+                    photonView.RPC("LoadAction", RpcTarget.AllBuffered);
                 }
-                if(Input.GetKey(KeyCode.Space))
+                if(Input.GetKeyDown(KeyCode.Space))
                 {
-                    DodgeAction();
+                    // RPC
+                    // DodgeAction();
+                    photonView.RPC("DodgeAction", RpcTarget.AllBuffered);
                 }
+                // RPC inside
                 ShootActionCheck();
             }
         }
@@ -143,6 +152,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         // #endif
     }
 
+    [PunRPC]
     private void ShootActionCheck()
     {
         if(Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
@@ -164,7 +174,21 @@ public class PlayerController : MonoBehaviourPunCallbacks
         hit = Physics2D.Raycast(ray.origin, ray.direction, 20f, playerLayerMask);
         if(hit.collider != null)
         {
-            ShootAction(hit.collider.gameObject);
+            // RPC
+            // ShootAction(hit.collider.gameObject);
+            // SetTarget(hit.collider.gameObject);
+            if(hit.collider.gameObject.name.Equals("Cage"))
+            {
+                targetNumber = -5;
+            }
+            else
+            {
+                targetNumber = hit.collider.gameObject.GetComponent<PlayerController>().PlayerNumber;
+            }
+            photonView.RPC("ShootAction", RpcTarget.AllBuffered);
+            photonView.RPC("SetTarget", RpcTarget.AllBuffered, targetNumber);
+            this.target = hit.collider.gameObject;
+            PutCrosshairOnTarget();
         }
     }
 
@@ -187,6 +211,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         DisableCrosshair();
     }
 
+    [PunRPC]
     private void LoadAction()
     {
         print("LoadAction");
@@ -224,6 +249,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
     private void DodgeAction()
     {
         print("DodgeAction");
@@ -256,12 +282,25 @@ public class PlayerController : MonoBehaviourPunCallbacks
         StartCoroutine(LerpPosition(transform.position + moveStep, moveTime));
     }
 
-    private void ShootAction(GameObject target)
+    [PunRPC]
+    private void ShootAction()
     {
         print("ShootAction");
-        this.target = target;
-        PutCrosshairOnTarget();
         action = PlayerActions.SHOOT;
+    }
+
+    [PunRPC]
+    private void SetTarget(int targetNumber)
+    {
+        this.targetNumber = targetNumber;
+        if(targetNumber == -5) //cage
+        {
+            this.target = BattleSystem.Instance.Cage;
+        }
+        else
+        {
+            this.target = BattleSystem.Instance.Players.Find(player => player.PlayerNumber == targetNumber).gameObject;
+        }
     }
 
     public void DisableForEndgame()
@@ -288,7 +327,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void PutCrosshairOnTarget()
     {
-        targetCrossHair.transform.position = target.transform.position + crossHairOffset;
+        targetCrossHair.transform.position = this.target.transform.position + crossHairOffset;
         EnableCrosshair();
     }
 
@@ -301,10 +340,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         targetCrossHair.SetActive(false);
         target = null;
+        targetNumber = -10;
     }
     
-    
-    [PunRPC]
     public void Die()
     {
         PlayRadomDeathAudio(audioMaxDelay);

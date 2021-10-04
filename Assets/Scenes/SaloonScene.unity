@@ -371,7 +371,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.6
+  m_fontSize: 37.65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -705,7 +705,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42.45
+  m_fontSize: 42.5
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1871,6 +1871,10 @@ PrefabInstance:
     - target: {fileID: 8325338694150217569, guid: c1d024870b5f7e54ab4c32249b0f2deb, type: 3}
       propertyPath: m_Name
       value: SaloonGrid
+      objectReference: {fileID: 0}
+    - target: {fileID: 8325338694150217569, guid: c1d024870b5f7e54ab4c32249b0f2deb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8325338694150217571, guid: c1d024870b5f7e54ab4c32249b0f2deb, type: 3}
       propertyPath: m_RootOrder

@@ -41,13 +41,15 @@ public class BattleSystem : MonoBehaviourPunCallbacks
     private List<PlayerController> shootPlayers;
     private List<PlayerController> dodgePlayers;
     private List<PlayerController> loadPlayers;
-    private List<GameObject> targetObjects;
+    private List<int> targetNumbers;
     private CageState cageState;
     public CageState CageState { get => cageState; private set => cageState = value; }
     public static BattleSystem Instance;
     private bool isEnd = false;
     private List<string> playersWhoGotTheCocktail;
+
     public List<string> PlayersWhoGotTheCocktail { get => playersWhoGotTheCocktail; set => playersWhoGotTheCocktail = value; }
+    public GameObject Cage { get => cage; private set => cage = value; }
 
     void Awake()
     {
@@ -71,7 +73,7 @@ public class BattleSystem : MonoBehaviourPunCallbacks
         loadPlayers = new List<PlayerController>();
         shootPlayers = new List<PlayerController>();
         dodgePlayers = new List<PlayerController>();
-        targetObjects = new List<GameObject>();
+        targetNumbers = new List<int>();
         playersWhoGotTheCocktail = new List<string>();
         if(BattleSystem.Instance.BattleMode == BattleMode.DEFAULT)
         {
@@ -121,8 +123,6 @@ public class BattleSystem : MonoBehaviourPunCallbacks
                 {
                     print("RESULT");
                     // compare all the action lists
-                    // DoActions();
-
                     // need to give time between Results and next phase.
                     CalculateResults();
                     ChangeStateTo(BattleState.IDLE);
@@ -193,7 +193,7 @@ public class BattleSystem : MonoBehaviourPunCallbacks
             }
             else
             {
-                targetObjects.Remove(player.Target); //doesnt have bullets to shoot. lose the turn!
+                targetNumbers.Remove(player.TargetNumber); //doesnt have bullets to shoot. lose the turn!
                 player.DryShoot();
             }
         }
@@ -204,7 +204,7 @@ public class BattleSystem : MonoBehaviourPunCallbacks
         foreach(PlayerController player in dodgePlayers)
         {
             player.Dodge();
-            if(targetObjects.Contains(player.gameObject))
+            if(targetNumbers.Contains(player.PlayerNumber))
             {
                 var randomDelay = Random.Range(player.AudioMaxDelay/2, player.AudioMaxDelay);
                 player.PlayRandomDodgeAudio(randomDelay);
@@ -224,21 +224,21 @@ public class BattleSystem : MonoBehaviourPunCallbacks
 
     private void GetShotAndDie()
     {
-        foreach(GameObject target in targetObjects)
+        foreach(int targetNumber in targetNumbers)
         {   
-            if(target.name.Equals("Cage")) // Someone shot the cage!!
+            if(targetNumber == -5) // Someone shot the cage!!
             {
                 cageState = CageState.BROKEN;
                 StartCoroutine(PlayCageBreakAudio());
             }
             else
             {
-                var targetPlayer = target.GetComponent<PlayerController>();
+                var targetPlayer = players.Find(player => player.PlayerNumber == targetNumber);
                 if(idlePlayers.Contains(targetPlayer) || loadPlayers.Contains(targetPlayer) || shootPlayers.Contains(targetPlayer))
                 {
-                    //RPC
-                    targetPlayer.photonView.RPC("Die", RpcTarget.AllBuffered);
-                    // targetPlayer.Die();
+                    //RPC ????
+                    // targetPlayer.photonView.RPC("Die", RpcTarget.AllBuffered);
+                    targetPlayer.Die();
                 }
             }
         }
@@ -402,7 +402,7 @@ public class BattleSystem : MonoBehaviourPunCallbacks
                 case PlayerActions.SHOOT:
                 {
                     shootPlayers.Add(player);
-                    targetObjects.Add(player.Target);
+                    targetNumbers.Add(player.TargetNumber);
                     break;
                 }
                 default: break;
@@ -432,7 +432,7 @@ public class BattleSystem : MonoBehaviourPunCallbacks
         shootPlayers.Clear();
         dodgePlayers.Clear();
         loadPlayers.Clear();
-        targetObjects.Clear();
+        targetNumbers.Clear();
     }
 
     private void ResetPlayersActions()

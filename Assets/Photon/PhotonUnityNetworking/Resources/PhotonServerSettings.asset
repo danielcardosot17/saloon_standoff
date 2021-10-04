@@ -45,6 +45,12 @@ MonoBehaviour:
   - UpdatePlayerConnectedCount
   - InitializePlayer
   - Die
+  - Shoot
+  - DodgeAction
+  - LoadAction
+  - ShootActionCheck
+  - ShootAction
+  - SetTarget
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
