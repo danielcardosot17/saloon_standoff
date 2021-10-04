@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] private Transform bulletOrigin;
     [SerializeField] private LineRenderer bulletLine;
     [SerializeField] private float bulletLineTime;
+    [SerializeField] private GameObject bulletCanvas;
+
     private Player photonPlayer;
     private string nickName;
     public string NickName { get => nickName; private set => nickName = value; }
@@ -126,6 +128,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         targetNumber = -10;
         chosenTarget = targetNumber;
         bulletLine.enabled = false;
+        bulletCanvas.SetActive(false);
         maxBulletCount = BattleSystem.Instance.MaxBulletCount;
     }
 
@@ -451,7 +454,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void UpdateBulletCanvas()
     {
-        
+        if(bulletCount > 0)
+        {
+            bulletCanvas.SetActive(true);
+        }
+        else
+        {
+            bulletCanvas.SetActive(false);
+        }
     }
     
     private void PlayRandomCocktailAudio()
