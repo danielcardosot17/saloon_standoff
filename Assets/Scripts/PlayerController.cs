@@ -132,15 +132,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 ShootActionCheck();
             }
         }
-        #if UNITY_EDITOR
-        else if(!photonView.IsMine)
-        {
-            if(BattleSystem.Instance.BattleState == BattleState.COUNTDOWN)
-            {
-                DodgeAction();
-            }
-        }
-        #endif
+        // #if UNITY_EDITOR
+        // else if(!photonView.IsMine)
+        // {
+        //     if(BattleSystem.Instance.BattleState == BattleState.COUNTDOWN)
+        //     {
+        //         DodgeAction();
+        //     }
+        // }
+        // #endif
     }
 
     private void ShootActionCheck()
@@ -303,6 +303,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         target = null;
     }
     
+    
+    [PunRPC]
     public void Die()
     {
         PlayRadomDeathAudio(audioMaxDelay);

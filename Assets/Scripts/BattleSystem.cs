@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -9,7 +10,7 @@ using Random = UnityEngine.Random;
 public enum BattleState { START, COUNTDOWN, PLAYERACTION, RESULT, IDLE, END}
 public enum BattleMode { DEFAULT }
 public enum CageState { NORMAL, BROKEN }
-public class BattleSystem : MonoBehaviour
+public class BattleSystem : MonoBehaviourPunCallbacks
 {
     [SerializeField] private CountdownTimer countdownTimer;
     [SerializeField] private int maxBulletCount;
@@ -235,7 +236,9 @@ public class BattleSystem : MonoBehaviour
                 var targetPlayer = target.GetComponent<PlayerController>();
                 if(idlePlayers.Contains(targetPlayer) || loadPlayers.Contains(targetPlayer) || shootPlayers.Contains(targetPlayer))
                 {
-                    targetPlayer.Die();
+                    //RPC
+                    targetPlayer.photonView.RPC("Die", RpcTarget.AllBuffered);
+                    // targetPlayer.Die();
                 }
             }
         }
