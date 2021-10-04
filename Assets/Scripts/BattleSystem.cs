@@ -27,6 +27,7 @@ public class BattleSystem : MonoBehaviourPunCallbacks
     [SerializeField] private string cageBreakAudio;
     [SerializeField] private TMP_Text artistText;
     [SerializeField] private TMP_Text musicText;
+    [SerializeField] private float getActionsDelay;
     public int MaxBulletCount { get => maxBulletCount; private set => maxBulletCount = value; }
     private PlayerController soloWinner;
     private PlayerController localPlayer;
@@ -115,8 +116,11 @@ public class BattleSystem : MonoBehaviourPunCallbacks
                 {
                     print("PLAYERACTION");
                     // populate all those action lists
-                    GetPlayersActions();
-                    ChangeStateTo(BattleState.RESULT);
+                    UpdatePlayersActions();
+                    // go idle while wait for players to update their actions 
+                    print("IDLE");
+                    ChangeStateTo(BattleState.IDLE);
+                    StartCoroutine(WaitThenGetActionsThenChangeState());
                     break;
                 }
                 case BattleState.RESULT:
@@ -126,6 +130,7 @@ public class BattleSystem : MonoBehaviourPunCallbacks
                     // need to give time between Results and next phase.
                     CalculateResults();
                     ChangeStateTo(BattleState.IDLE);
+                    print("IDLE");
                     StartCoroutine(EnterIdleStateForThisTimeThenCheckEndgame(idleTime));
                     break;
                 }
@@ -137,12 +142,55 @@ public class BattleSystem : MonoBehaviourPunCallbacks
                 }
                 case BattleState.IDLE:
                 {
-                    print("IDLE");
                     break;
                 }
                 default: break;
             }
         }
+    }
+
+    IEnumerator WaitThenGetActionsThenChangeState()
+    {
+        yield return new WaitForSeconds(getActionsDelay);
+        GetPlayersActions();
+        ChangeStateTo(BattleState.RESULT);
+    }
+
+    private void GetPlayersActions()
+    {
+        foreach(PlayerController player in players)
+        {
+            switch(player.Action)
+            {
+                case PlayerActions.IDLE:
+                {
+                    idlePlayers.Add(player);
+                    break;
+                }
+                case PlayerActions.LOAD:
+                {
+                    loadPlayers.Add(player);
+                    break;
+                }
+                case PlayerActions.DODGE:
+                {
+                    dodgePlayers.Add(player);
+                    break;
+                }
+                case PlayerActions.SHOOT:
+                {
+                    shootPlayers.Add(player);
+                    targetNumbers.Add(player.TargetNumber);
+                    break;
+                }
+                default: break;
+            }
+        }
+    }
+
+    private void UpdatePlayersActions()
+    {
+        localPlayer.photonView.RPC("UpdateActionAndTargetRPC", RpcTarget.All, (byte)localPlayer.ChosenAction, localPlayer.ChosenTarget);
     }
 
     IEnumerator EnterIdleStateForThisTimeThenCheckEndgame(float waitTime)
@@ -236,8 +284,6 @@ public class BattleSystem : MonoBehaviourPunCallbacks
                 var targetPlayer = players.Find(player => player.PlayerNumber == targetNumber);
                 if(idlePlayers.Contains(targetPlayer) || loadPlayers.Contains(targetPlayer) || shootPlayers.Contains(targetPlayer))
                 {
-                    //RPC ????
-                    // targetPlayer.photonView.RPC("Die", RpcTarget.AllBuffered);
                     targetPlayer.Die();
                 }
             }
@@ -376,38 +422,6 @@ public class BattleSystem : MonoBehaviourPunCallbacks
             }
         }
         return true;
-    }
-
-    private void GetPlayersActions()
-    {
-        foreach(PlayerController player in players)
-        {
-            switch(player.Action)
-            {
-                case PlayerActions.IDLE:
-                {
-                    idlePlayers.Add(player);
-                    break;
-                }
-                case PlayerActions.LOAD:
-                {
-                    loadPlayers.Add(player);
-                    break;
-                }
-                case PlayerActions.DODGE:
-                {
-                    dodgePlayers.Add(player);
-                    break;
-                }
-                case PlayerActions.SHOOT:
-                {
-                    shootPlayers.Add(player);
-                    targetNumbers.Add(player.TargetNumber);
-                    break;
-                }
-                default: break;
-            }
-        }
     }
 
     private void StartCountdown()
