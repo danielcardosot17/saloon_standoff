@@ -306,7 +306,7 @@ public class BattleSystem : MonoBehaviourPunCallbacks
 
     public void ChangeLoadButtonText()
     {
-        loadBtnText.text += "\n" + "Drink"; 
+        loadBtnText.text = "Load" + "\n" + "Drink"; 
     }
 
     private void GetShotAndDie()
