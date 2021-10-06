@@ -19,6 +19,7 @@ public class MenuController : MonoBehaviourPunCallbacks
     
     public override void OnConnectedToMaster()
     {
+        PhotonNetwork.JoinLobby();
         enterGameMenu.gameObject.SetActive(true);
         enterGameMenu.UpdatePlayerConnectedCount();
         if(!AudioManager.Instance.IsPlaying("EnterGameMusic"))
@@ -29,10 +30,37 @@ public class MenuController : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        print("Joined room: " + PhotonNetwork.CurrentRoom.Name);
         ChangeMenu(lobbyMenu.gameObject);
         lobbyMenu.photonView.RPC("UpdatePlayerList",RpcTarget.All);
     }
-    
+
+    public override void OnCreatedRoom()
+    {
+        print("Created room: " + PhotonNetwork.CurrentRoom.Name);
+        // enterGameMenu.photonView.RPC("UpdateRoomList", RpcTarget.All, PhotonNetwork.CurrentRoom.Name);
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        print("OnRoomListUpdate");
+        var roomNames = "";
+        var roomCount = 0;
+        foreach(RoomInfo info in roomList)
+        {
+            if(info.PlayerCount > 0)
+            {
+                print(info.Name);
+                var playerMaxAndCount = "";
+                playerMaxAndCount = " ... " + info.PlayerCount + "." + info.MaxPlayers;
+                roomNames += info.Name + playerMaxAndCount + "\n";
+                roomCount++;
+            }
+        }
+        enterGameMenu.UpdateRoomList(roomNames);
+        enterGameMenu.UpdateRoomCount(roomCount);
+    }
+
     public void ChangeMenu(GameObject menu)
     {
         enterGameMenu.gameObject.SetActive(false);

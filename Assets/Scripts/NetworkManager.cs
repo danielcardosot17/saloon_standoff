@@ -12,7 +12,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public static NetworkManager Instance {get; private set;}
 
     [SerializeField] private int maxPlayers;
-    private RoomOptions roomOptions = new RoomOptions();
     
     void Awake()
     {
@@ -29,7 +28,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
-        roomOptions.MaxPlayers = (byte)maxPlayers;
     }
 
     public override void OnConnectedToMaster()
@@ -39,7 +37,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void CreateRoom(string roomName)
     { 
-        PhotonNetwork.CreateRoom(roomName, roomOptions);
+        PhotonNetwork.CreateRoom(roomName, new RoomOptions {MaxPlayers = (byte)maxPlayers, IsVisible = true , EmptyRoomTtl = 0});
     }
     public void JoinRoom(string roomName)
     {

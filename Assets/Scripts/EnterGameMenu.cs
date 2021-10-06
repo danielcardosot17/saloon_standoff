@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Photon.Pun;
 
 public class EnterGameMenu : MonoBehaviour
 {
     [SerializeField] private TMP_Text roomName;
     [SerializeField] private TMP_Text userName;
-    [SerializeField] private TMP_Text playerList;
+    [SerializeField] private TMP_Text playerCount;
+    [SerializeField] private TMP_Text roomCount;
+    [SerializeField] private TMP_Text roomList;
 
     private void Update() {
         UpdatePlayerConnectedCount();
@@ -30,7 +31,17 @@ public class EnterGameMenu : MonoBehaviour
     }
     public void UpdatePlayerConnectedCount()
     {
-        playerList.text = NetworkManager.Instance.GetPlayerCount() + " Players online.";
+        playerCount.text = NetworkManager.Instance.GetPlayerCount() + " Players online.";
+    }
+
+    public void UpdateRoomCount(int roomCount)
+    {
+        this.roomCount.text = roomCount + " open Saloons";
     }
     
+    public void UpdateRoomList(string roomNames)
+    {
+        roomList.text = roomNames;
+    }
+
 }
